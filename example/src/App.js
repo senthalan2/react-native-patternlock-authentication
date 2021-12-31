@@ -1,12 +1,19 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
-import PatternLock from 'react-native-patternlock-authentication';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { PatternLock } from 'react-native-patternlock-authentication';
 
 export default function App() {
+  const onPatternMatch = () => {};
+
+  const onWrongPattern = () => {};
+
   return (
     <View style={styles.container}>
-      <PatternLock />
+      <PatternLock
+        onPatternMatch={onPatternMatch}
+        onWrongPattern={onWrongPattern}
+      />
     </View>
   );
 }
