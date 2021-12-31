@@ -143,5 +143,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "react-native-svg": "^12.1.1"
   }
 }

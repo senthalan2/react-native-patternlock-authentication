@@ -1,3 +1,4 @@
-import PatternLock from './PatternLock';
-
-module.exports = PatternLock;
+import PatternLock from './PatternLockAuthentication/PatternLock';
+module.exports = {
+  PatternLock,
+};
