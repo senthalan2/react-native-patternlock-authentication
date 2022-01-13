@@ -145,6 +145,7 @@
     ]
   },
   "dependencies": {
+    "prop-types": "^15.8.1",
     "react-native-svg": "^12.1.1"
   }
 }

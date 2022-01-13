@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import {
   StyleSheet,
@@ -7,70 +5,92 @@ import {
   View,
   Animated,
   PanResponder,
-  Alert,
+  Vibration,
+  Dimensions,
 } from 'react-native';
+
 import Svg, { Line, Circle } from 'react-native-svg';
 
 import {
   populateDotsCoordinate,
   getDotIndex,
   getIntermediateDotIndexes,
+  getCorrectPatterninString,
+  getCorrectPatterninArray,
 } from './Helpers';
+import { PatternProcess } from './PatternProcess';
+
+const { width, height } = Dimensions.get('window');
 
 type Coordinate = {
-  x: Number,
-  y: Number,
+  x: number,
+  y: number,
 };
 
-type Props = {
-  containerDimension: Number,
-  containerWidth: Number,
-  containerHeight: Number,
+type Props = typeof PatternLock.defaultProps & {
+  containerDimension: number,
+  containerWidth: number,
+  containerHeight: number,
   correctPattern: Array<Coordinate>,
-  hint: String,
+  processName: String,
+  isChangePattern: boolean,
+  showHintMessage: Boolean,
   dotRadius: Number,
-  snapDotRadius: Number,
-  snapDuration: Number,
-  lineStrokeWidth: Number,
-  wrongPatternDelayTime: Number,
-  correctPatternDelayTime: Number,
-  wrongPatternColor: String,
-  correctPatternColor: String,
-  activeLineColor: String,
-  movingLineColor: String,
   dotsColor: String,
-  isGoneCorrectPattern: Boolean,
-  messageAfterWrongPattern: String,
-  showErrorMessage: Boolean,
-  messageTextColor: String,
+  movingLineColor: String,
+  snapDotRadius: Number,
+  lineStrokeWidth: String,
+  activeLineColor: String,
+  wrongPatternColor: String,
+  snapDuration: Number,
+  connectedDotsColor: String,
+  correctPatternColor: Number,
+  minPatternLength: Number,
+  newPatternConfirmationMessage: String,
+  wrongPatternDelayTime: Number,
   correctPatternMessage: String,
-  correctPatternMessageColor: String,
+  correctPatternDelayTime: Number,
+  correctPatternDelayDurationMessage: String,
+  iswrongPatternCountLimited: Boolean,
+  totalWrongPatternCount: Number,
   wrongPatternDelayDurationMessage: String,
-  onPatternMatch: () => Boolean,
+  minPatternLengthErrorMessage: String,
+  wrongPatternMessage: String,
+  changePatternFirstMessage: String,
+  changePatternDelayTime: Number,
+  changePatternSecondMessage: String,
+  isEnableHeadingText: Boolean,
+  headingText: String,
+  enablePatternNotSameCondition: Boolean,
+  patternTotalCountReachedErrorMessage: String,
+  newPatternDelayDurationMessage: String,
+  newPatternMatchedMessage: String,
+  newPatternDelayTime: Number,
+  patternCountLimitedErrorMessage: String,
+  samePatternMatchedMessage: String,
+  hintTextStyle: StyleProp<TextStyle>,
+  headingTextStyle: StyleProp<TextStyle>,
+  hintTextContainerStyle: StyleProp<ViewStyle>,
+  onPatternMatch: () => boolean,
+  onWrongPattern: () => boolean,
 };
 
 type State = {
   activeDotCoordinate: ?Coordinate,
   initialGestureCoordinate: ?Coordinate,
   pattern: Array<Coordinate>,
+  correctPattern: Array<Coordinate>,
   showError: boolean,
-  disableTouch: boolean,
   showHint: boolean,
-  matched: Boolean,
-  showWrongPatternDelayDurationMessage: Boolean,
-  showMessageAfterWrongPattern: Boolean,
-  isWrongPattern: Boolean,
-  messageColor: String,
+  hintText: String,
+  matched: boolean,
+  changePatternConfirm: boolean,
+  processName: String,
 };
 
-// const DEFAULT_DOT_RADIUS = 10;
-// const SNAP_DOT_RADIUS = 20;
-// const SNAP_DURATION = 100;
+const VIBE_PATTERN = [0, 200];
 
-export default class PatternLockAuthentication extends React.Component<
-  Props,
-  State
-> {
+export default class PatternLock extends React.Component<Props, State> {
   _panResponder: { panHandlers: Object };
   _activeLine: ?Object;
   _dots: Array<Coordinate>;
@@ -83,20 +103,72 @@ export default class PatternLockAuthentication extends React.Component<
 
   _patternMatchedTimeout: number;
 
+  _isSamePattern: boolean;
+
+  static defaultProps = {
+    containerDimension: 3,
+    containerWidth: width,
+    containerHeight: height / 2,
+    processName: PatternProcess.NEW_PATTERN,
+    isChangePattern: true,
+    showHintMessage: true,
+    dotRadius: 10,
+    dotsColor: 'red',
+    movingLineColor: 'blue',
+    snapDotRadius: 15,
+    lineStrokeWidth: '6',
+    activeLineColor: 'blue',
+    wrongPatternColor: 'red',
+    snapDuration: 100,
+    connectedDotsColor: 'blue',
+    correctPatternColor: 'green',
+    minPatternLength: 3,
+    newPatternConfirmationMessage: '',
+    wrongPatternDelayTime: 1000,
+    correctPatternMessage: '',
+    correctPatternDelayTime: 1000,
+    correctPatternDelayDurationMessage: '',
+    iswrongPatternCountLimited: false,
+    totalWrongPatternCount: 0,
+    wrongPatternDelayDurationMessage: '',
+    minPatternLengthErrorMessage: '',
+    wrongPatternMessage: 'Wrong Pattern',
+    changePatternFirstMessage: '',
+    changePatternDelayTime: 1000,
+    changePatternSecondMessage: '',
+    isEnableHeadingText: false,
+    headingText: '',
+    enablePatternNotSameCondition: true,
+    patternTotalCountReachedErrorMessage: '',
+    newPatternDelayDurationMessage: '',
+    newPatternMatchedMessage: '',
+    newPatternDelayTime: 1000,
+    patternCountLimitedErrorMessage: '',
+    samePatternMatchedMessage: '',
+    hintTextStyle: { color: 'blue', alignSelf: 'center' },
+    headingTextStyle: { color: 'blue', alignSelf: 'center' },
+    hintTextContainerStyle: {
+      alignItems: 'center',
+      marginTop: 30,
+      flexWrap: 'wrap',
+    },
+  };
+
   constructor() {
     super(...arguments);
     this.state = {
       initialGestureCoordinate: null,
       activeDotCoordinate: null,
       pattern: [],
+      correctPattern: this.props.correctPattern
+        ? getCorrectPatterninArray(this.props.correctPattern)
+        : null,
       showError: false,
-      disableTouch: false,
       showHint: false,
-      showWrongPatternDelayDurationMessage: false,
-      showMessageAfterWrongPattern: false,
-      isWrongPattern: false,
-      messageColor: 'white',
+      hintText: '',
       matched: false,
+      changePatternConfirm: false,
+      processName: this.props.processName,
     };
 
     let { containerDimension, containerWidth, containerHeight } = this.props;
@@ -110,6 +182,8 @@ export default class PatternLockAuthentication extends React.Component<
     this._mappedDotsIndex = mappedIndex;
     this._dotNodes = [];
 
+    var WRONGPATTERN_TOTAL_COUNT = this.props.totalWrongPatternCount;
+
     this._snapAnimatedValues = this._dots.map((dot, index) => {
       let animatedValue = new Animated.Value(this.props.dotRadius);
       animatedValue.addListener(({ value }) => {
@@ -120,8 +194,8 @@ export default class PatternLockAuthentication extends React.Component<
     });
 
     this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => !this.state.disableTouch,
-      onMoveShouldSetPanResponderCapture: () => !this.state.disableTouch,
+      onMoveShouldSetResponderCapture: () => !this.state.showError,
+      onMoveShouldSetPanResponderCapture: () => !this.state.showError,
 
       onPanResponderGrant: (e) => {
         let { locationX, locationY } = e.nativeEvent;
@@ -131,7 +205,10 @@ export default class PatternLockAuthentication extends React.Component<
           this._dots
         );
 
+        // Vibration.cancel();
+
         if (activeDotIndex != null) {
+          // Vibration.vibrate(VIBE_PATTERN);
           let activeDotCoordinate = this._dots[activeDotIndex];
           let firstDot = this._mappedDotsIndex[activeDotIndex];
           let dotWillSnap = this._snapAnimatedValues[activeDotIndex];
@@ -140,6 +217,7 @@ export default class PatternLockAuthentication extends React.Component<
               activeDotCoordinate,
               initialGestureCoordinate: activeDotCoordinate,
               pattern: [firstDot],
+              matched: false,
             },
             () => {
               this._snapDot(dotWillSnap);
@@ -178,7 +256,7 @@ export default class PatternLockAuthentication extends React.Component<
           };
 
           let intermediateDotIndexes = [];
-
+          // Vibration.vibrate(VIBE_PATTERN);
           if (pattern.length > 0) {
             intermediateDotIndexes = getIntermediateDotIndexes(
               pattern[pattern.length - 1],
@@ -225,62 +303,272 @@ export default class PatternLockAuthentication extends React.Component<
         }
       },
       onPanResponderRelease: () => {
-        let { pattern } = this.state;
+        let { pattern, processName } = this.state;
         if (pattern.length) {
-          if (this._isPatternMatched(pattern)) {
-            this.setState(
-              {
-                initialGestureCoordinate: null,
-                activeDotCoordinate: null,
-                isWrongPattern: false,
-                disableTouch: true,
-                matched: true,
-                messageColor: this.props.correctPatternMessageColor,
-              },
-              () => {
-                this._patternMatchedTimeout = setTimeout(() => {
-                  this.setState({
-                    disableTouch: false,
-                    matched: false,
-                  });
-
-                  if (this.props.isGoneCorrectPattern) {
-                    this.setState({
-                      showHint: false,
-                      pattern: [],
-                    });
+          if (processName === PatternProcess.CONFIRM_PATTERN) {
+            if (this._isPatternMatched(pattern)) {
+              if (!this.props.isChangePattern) {
+                WRONGPATTERN_TOTAL_COUNT = this.props.totalWrongPatternCount;
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    matched: true,
+                    showError: true,
+                    showHint: true,
+                    hintText: this.props.correctPatternDelayDurationMessage,
+                  },
+                  () => {
+                    this._patternMatchedTimeout = setTimeout(() => {
+                      this.setState({
+                        showHint: true,
+                        showError: false,
+                        hintText: this.props.correctPatternMessage,
+                        matched: false,
+                        pattern: [],
+                      });
+                      this.props.onPatternMatch(pattern);
+                    }, this.props.correctPatternDelayTime);
                   }
-
-                  this.props.onPatternMatch;
-                }, this.props.correctPatternDelayTime);
-              }
-            );
-          } else {
-            this.setState(
-              {
-                initialGestureCoordinate: null,
-                activeDotCoordinate: null,
-                showError: true,
-                disableTouch: true,
-                showHint: false,
-                isWrongPattern: true,
-                showWrongPatternDelayDurationMessage: true,
-                showMessageAfterWrongPattern: false,
-                messageColor: this.props.wrongPatternColor,
-              },
-              () => {
-                this._resetTimeout = setTimeout(() => {
-                  this.setState({
+                );
+              } else {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    matched: true,
+                    showError: true,
                     showHint: false,
-                    showError: false,
-                    disableTouch: false,
-                    pattern: [],
-                    showWrongPatternDelayDurationMessage: false,
-                    showMessageAfterWrongPattern: true,
-                  });
-                }, this.props.wrongPatternDelayTime);
+                    hintText: '',
+                  },
+                  () => {
+                    this.setState({
+                      showHint: true,
+                      hintText: this.props.correctPatternMessage,
+                      matched: true,
+                    });
+                    this._patternMatchedTimeout = setTimeout(
+                      () => {
+                        this.setState(
+                          {
+                            showHint: true,
+                            processName: this.state.changePatternConfirm
+                              ? PatternProcess.CONFIRM_PATTERN
+                              : PatternProcess.NEW_PATTERN,
+                            hintText: this.state.changePatternConfirm
+                              ? this.props.changePatternSecondMessage
+                              : this.props.changePatternFirstMessage,
+                            showError: false,
+                            matched: false,
+                            pattern: [],
+                          },
+                          () => {
+                            if (this.state.changePatternConfirm) {
+                              this.props.onPatternMatch(pattern);
+                            }
+                          }
+                        );
+                      },
+                      this.state.changePatternConfirm
+                        ? this.props.correctPatternDelayTime
+                        : this.props.changePatternDelayTime
+                    );
+                  }
+                );
               }
-            );
+            } else {
+              if (!this.props.isChangePattern) {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    showError: true,
+                    matched: false,
+                  },
+                  () => {
+                    if (pattern.length >= this.props.minPatternLength) {
+                      if (this.props.iswrongPatternCountLimited) {
+                        if (WRONGPATTERN_TOTAL_COUNT > 0) {
+                          WRONGPATTERN_TOTAL_COUNT =
+                            WRONGPATTERN_TOTAL_COUNT - 1;
+                        } else {
+                          WRONGPATTERN_TOTAL_COUNT = 0;
+                        }
+                      }
+                    }
+
+                    this.setState({
+                      showHint: true,
+                      hintText:
+                        pattern.length >= this.props.minPatternLength
+                          ? this.props.iswrongPatternCountLimited
+                            ? WRONGPATTERN_TOTAL_COUNT > 0
+                              ? this.props.patternCountLimitedErrorMessage
+                              : this.props.patternTotalCountReachedErrorMessage
+                            : this.props.wrongPatternDelayDurationMessage
+                          : this.props.minPatternLengthErrorMessage,
+                    });
+                    this._resetTimeout = setTimeout(() => {
+                      this.setState(
+                        {
+                          showHint: true,
+                          hintText: this.props.iswrongPatternCountLimited
+                            ? WRONGPATTERN_TOTAL_COUNT > 0
+                              ? this.props.patternCountLimitedErrorMessage
+                              : this.props.patternTotalCountReachedErrorMessage
+                            : this.props.wrongPatternMessage,
+                          showError: false,
+                          pattern: [],
+                        },
+                        () => {
+                          this.props.onWrongPattern(
+                            pattern,
+                            WRONGPATTERN_TOTAL_COUNT
+                          );
+                        }
+                      );
+                    }, this.props.wrongPatternDelayTime);
+                  }
+                );
+              } else {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    showError: true,
+                    matched: false,
+                  },
+                  () => {
+                    this.setState({
+                      showHint: true,
+                      hintText:
+                        pattern.length >= this.props.minPatternLength
+                          ? this.props.wrongPatternDelayDurationMessage
+                          : this.props.minPatternLengthErrorMessage,
+                    });
+                    this._resetTimeout = setTimeout(() => {
+                      this.setState({
+                        showHint: true,
+                        hintText: this.state.changePatternConfirm
+                          ? this.props.newPatternConfirmationMessage
+                          : this.props.wrongPatternMessage,
+                        showError: false,
+                        pattern: [],
+                      });
+                    }, this.props.wrongPatternDelayTime);
+                  }
+                );
+              }
+            }
+          } else if (processName === PatternProcess.NEW_PATTERN) {
+            if (!this.props.isChangePattern) {
+              if (pattern.length < this.props.minPatternLength) {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    showError: true,
+                    matched: false,
+                  },
+                  () => {
+                    this.setState({
+                      showHint: true,
+                      hintText: this.props.minPatternLengthErrorMessage,
+                    });
+                    this._resetTimeout = setTimeout(() => {
+                      this.setState({
+                        showHint: true,
+                        hintText: this.props.wrongPatternMessage,
+                        showError: false,
+                        pattern: [],
+                      });
+                    }, this.props.wrongPatternDelayTime);
+                  }
+                );
+              } else {
+                this.setState(
+                  {
+                    correctPattern: pattern,
+                    showError: true,
+                    showHint: true,
+                    hintText: this.props.correctPatternMessage,
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    matched: true,
+                  },
+                  () => {
+                    this._patternMatchedTimeout = setTimeout(() => {
+                      this.setState({
+                        showHint: true,
+                        processName: PatternProcess.CONFIRM_PATTERN,
+                        hintText: this.props.newPatternConfirmationMessage,
+                        showError: false,
+                        matched: false,
+                        pattern: [],
+                      });
+                    }, this.props.correctPatternDelayTime);
+                  }
+                );
+              }
+            } else {
+              if (
+                (this.props.enablePatternNotSameCondition &&
+                  getCorrectPatterninString(this.props.correctPattern) ===
+                    getCorrectPatterninString(pattern)) ||
+                pattern.length < this.props.minPatternLength
+              ) {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    showError: true,
+                    matched: false,
+                  },
+                  () => {
+                    this.setState({
+                      showHint: true,
+                      hintText:
+                        pattern.length < this.props.minPatternLength
+                          ? this.props.minPatternLengthErrorMessage
+                          : this.props.samePatternMatchedMessage,
+                    });
+                    this._resetTimeout = setTimeout(() => {
+                      this.setState({
+                        showHint: true,
+                        hintText: this.props.wrongPatternMessage,
+                        showError: false,
+                        pattern: [],
+                      });
+                    }, this.props.wrongPatternDelayTime);
+                  }
+                );
+              } else {
+                this.setState(
+                  {
+                    initialGestureCoordinate: null,
+                    activeDotCoordinate: null,
+                    matched: true,
+                    showError: true,
+                    showHint: true,
+                    hintText: this.props.newPatternDelayDurationMessage,
+                  },
+                  () => {
+                    this._patternMatchedTimeout = setTimeout(() => {
+                      this.setState({
+                        correctPattern: pattern,
+                        showHint: true,
+                        processName: 'confirm_pattern',
+                        hintText: this.props.newPatternMatchedMessage,
+                        showError: false,
+                        changePatternConfirm: true,
+                        matched: false,
+                        pattern: [],
+                      });
+                    }, this.props.newPatternDelayTime);
+                  }
+                );
+              }
+            }
           }
         }
       },
@@ -289,134 +577,130 @@ export default class PatternLockAuthentication extends React.Component<
 
   componentWillUnmount() {
     clearTimeout(this._resetTimeout);
+    clearTimeout(this._patternMatchedTimeout);
   }
 
   render() {
-    let { containerHeight, containerWidth, hint } = this.props;
+    let { containerHeight, containerWidth } = this.props;
     let {
-      initialGestureCoordinate,
       activeDotCoordinate,
       pattern,
       showError,
-      showWrongPatternDelayDurationMessage,
-      showMessageAfterWrongPattern,
       showHint,
-      messageColor,
-      isWrongPattern,
       matched,
+      hintText,
+      processName,
     } = this.state;
     let message;
-    // if (showHint) {
-    //   message = `hint: ${hint}`;
-    // } else
-    if (this.props.showErrorMessage) {
-      if (isWrongPattern) {
-        if (showWrongPatternDelayDurationMessage) {
-          message = this.props.wrongPatternDelayDurationMessage;
-        } else if (showMessageAfterWrongPattern) {
-          message = this.props.messageAfterWrongPattern;
-        }
-      } else if (matched) {
-        message = this.props.correctPatternMessage;
-      } else {
-        message = '';
-      }
+    let headingText;
+    if (showHint) {
+      message = hintText;
+    } else {
+      message = '';
     }
+
+    if (processName === 'confirm_pattern') {
+      headingText = this.props.headingText
+        ? this.props.headingText
+        : 'Confirm Pattern';
+    } else if (processName === 'set_pattern') {
+      headingText = this.props.headingText
+        ? this.props.headingText
+        : 'Set New Pattern';
+    }
+
     return (
-      <View style={styles.container}>
-        {this.props.showErrorMessage && (
-          <View style={styles.hintContainer}>
-            <Text
-              style={[
-                styles.hintText,
-                {
-                  color: messageColor,
-                },
-              ]}
-            >
-              {message}
-            </Text>
-          </View>
+      <>
+        {this.props.isEnableHeadingText && (
+          <Text style={this.props.headingTextStyle}>{headingText}</Text>
         )}
-        <Animated.View {...this._panResponder.panHandlers}>
-          <Svg height={containerHeight} width={containerWidth}>
-            {this._dots.map((dot, i) => {
-              let mappedDot = this._mappedDotsIndex[i];
-              let isIncludedInPattern = pattern.find(
-                (dot) => dot.x === mappedDot.x && dot.y === mappedDot.y
-              );
-              return (
-                <Circle
-                  ref={(circle) => (this._dotNodes[i] = circle)}
-                  key={i}
-                  cx={dot.x}
-                  cy={dot.y}
-                  r={this.props.dotRadius}
-                  fill={
-                    (showError &&
-                      isIncludedInPattern &&
-                      this.props.wrongPatternColor) ||
-                    (matched &&
-                      isIncludedInPattern &&
-                      this.props.correctPatternColor) ||
-                    this.props.dotsColor
-                  }
-                />
-              );
-            })}
-            {pattern.map((startCoordinate, index) => {
-              if (index === pattern.length - 1) {
-                return;
-              }
-              let startIndex = this._mappedDotsIndex.findIndex((dot) => {
-                return (
-                  dot.x === startCoordinate.x && dot.y === startCoordinate.y
+        <View style={styles.container}>
+          {this.props.showHintMessage && (
+            <View style={this.props.hintTextContainerStyle}>
+              <Text style={this.props.hintTextStyle}>{message}</Text>
+            </View>
+          )}
+          <Animated.View {...this._panResponder.panHandlers}>
+            <Svg height={containerHeight} width={containerWidth}>
+              {this._dots.map((dot, i) => {
+                let mappedDot = this._mappedDotsIndex[i];
+                let isIncludedInPattern = pattern.find(
+                  (dot) => dot.x === mappedDot.x && dot.y === mappedDot.y
                 );
-              });
-              let endCoordinate = pattern[index + 1];
-              let endIndex = this._mappedDotsIndex.findIndex((dot) => {
-                return dot.x === endCoordinate.x && dot.y === endCoordinate.y;
-              });
+                return (
+                  <Circle
+                    ref={(circle) => (this._dotNodes[i] = circle)}
+                    key={i}
+                    cx={dot.x}
+                    cy={dot.y}
+                    r={this.props.dotRadius}
+                    fill={
+                      (isIncludedInPattern &&
+                        matched &&
+                        this.props.correctPatternColor) ||
+                      (showError &&
+                        isIncludedInPattern &&
+                        this.props.wrongPatternColor) ||
+                      (isIncludedInPattern && this.props.connectedDotsColor) ||
+                      this.props.dotsColor
+                    }
+                  />
+                );
+              })}
+              {pattern.map((startCoordinate, index) => {
+                if (index === pattern.length - 1) {
+                  return;
+                }
+                let startIndex = this._mappedDotsIndex.findIndex((dot) => {
+                  return (
+                    dot.x === startCoordinate.x && dot.y === startCoordinate.y
+                  );
+                });
+                let endCoordinate = pattern[index + 1];
+                let endIndex = this._mappedDotsIndex.findIndex((dot) => {
+                  return dot.x === endCoordinate.x && dot.y === endCoordinate.y;
+                });
 
-              if (startIndex < 0 || endIndex < 0) {
-                return;
-              }
+                if (startIndex < 0 || endIndex < 0) {
+                  return;
+                }
 
-              let actualStartDot = this._dots[startIndex];
-              let actualEndDot = this._dots[endIndex];
+                let actualStartDot = this._dots[startIndex];
+                let actualEndDot = this._dots[endIndex];
 
-              return (
+                return (
+                  <Line
+                    key={`fixedLine${index}`}
+                    x1={actualStartDot.x}
+                    y1={actualStartDot.y}
+                    x2={actualEndDot.x}
+                    y2={actualEndDot.y}
+                    stroke={
+                      matched
+                        ? this.props.correctPatternColor
+                        : showError
+                        ? this.props.wrongPatternColor
+                        : this.props.activeLineColor
+                    }
+                    strokeWidth={this.props.lineStrokeWidth.toString()}
+                  />
+                );
+              })}
+              {activeDotCoordinate ? (
                 <Line
-                  key={`fixedLine${index}`}
-                  x1={actualStartDot.x}
-                  y1={actualStartDot.y}
-                  x2={actualEndDot.x}
-                  y2={actualEndDot.y}
-                  stroke={
-                    showError
-                      ? this.props.wrongPatternColor
-                      : matched
-                      ? this.props.correctPatternColor
-                      : this.props.activeLineColor
-                  }
-                  strokeWidth={this.props.lineStrokeWidth}
+                  ref={(component) => (this._activeLine = component)}
+                  x1={activeDotCoordinate.x}
+                  y1={activeDotCoordinate.y}
+                  x2={activeDotCoordinate.x}
+                  y2={activeDotCoordinate.y}
+                  stroke={this.props.movingLineColor}
+                  strokeWidth={this.props.lineStrokeWidth.toString()}
                 />
-              );
-            })}
-            {activeDotCoordinate ? (
-              <Line
-                ref={(component) => (this._activeLine = component)}
-                x1={activeDotCoordinate.x}
-                y1={activeDotCoordinate.y}
-                x2={activeDotCoordinate.x}
-                y2={activeDotCoordinate.y}
-                stroke={this.props.movingLineColor}
-                strokeWidth={this.props.lineStrokeWidth}
-              />
-            ) : null}
-          </Svg>
-        </Animated.View>
-      </View>
+              ) : null}
+            </Svg>
+          </Animated.View>
+        </View>
+      </>
     );
   }
 
@@ -430,7 +714,7 @@ export default class PatternLockAuthentication extends React.Component<
   }
 
   _isPatternMatched(currentPattern: Array<Coordinate>) {
-    let { correctPattern } = this.props;
+    let { correctPattern } = this.state;
     if (currentPattern.length !== correctPattern.length) {
       return false;
     }
@@ -445,6 +729,16 @@ export default class PatternLockAuthentication extends React.Component<
     }
     return matched;
   }
+
+  _isSamePattern = (pattern: Coordinate) => {
+    if (
+      getCorrectPatterninString(pattern) ===
+      getCorrectPatterninString(this.props.correctPattern)
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   _snapDot(animatedValue: Animated.Value) {
     Animated.sequence([
@@ -464,19 +758,22 @@ export default class PatternLockAuthentication extends React.Component<
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
   hintContainer: {
     alignItems: 'center',
-    paddingBottom: 10,
-    height: 20,
+    marginTop: 30,
     flexWrap: 'wrap',
   },
   hintText: {
     color: 'red',
     textAlign: 'center',
+  },
+  textStyle: {
+    color: '#000000',
+    fontSize: 16,
+    alignSelf: 'center',
   },
 });
