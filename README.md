@@ -15,6 +15,31 @@ import { PatternLock } from "react-native-patternlock-authentication";
 
 // ...
 
+const onPatternMatch = (matchedPattern) => {
+
+  //Do your Functionlities
+
+}
+
+const onWrongPattern = (pattern,remainingWrongPatternCounts) => {   //remainingPatternCount return when you enable the wrong pattern limitation
+
+//Do Your Functionlities
+
+}
+
+return(
+//...
+
+<PatternLock
+onPatternMatch = {onPatternMatch}
+onWrongPattern = {onWrongPattern}
+{...restProps}  //use Rest of available props according to your convenience
+/>
+
+//...
+
+)
+
 ```
 
 ## Contributing
