@@ -28,15 +28,7 @@ const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
 const PATTERN_CONTAINER_WIDTH = width;         //you can change it as per your need
 const PATTERN_DIMENSION = 3;                   //you can change it as per your need
-const CORRECT_UNLOCK_PATTERN = [
-  { x: 0, y: 0 },
-  { x: 1, y: 0 },
-  { x: 2, y: 0 },
-  { x: 1, y: 1 },
-  { x: 0, y: 2 },
-  { x: 1, y: 2 },
-  { x: 2, y: 2 },
-];                           //Correct Pattern
+const CORRECT_UNLOCK_PATTERN = '0123'          //Correct Pattern
 
 // ...
 
@@ -127,12 +119,12 @@ export const App = () => {
 
 return(
 //...
-
-<FeaturedPatternLock
+      
+      <FeaturedPatternLock
         onPatternMatch={onPatternMatch}
         onWrongPattern={onWrongPattern}
         isChangePattern={false}
-        processName="set_pattern"
+        processName={PatternProcess.NEW_PATTERN}
         
         // ...Use Remaining Props as per your convenience
       />
