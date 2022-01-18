@@ -15,7 +15,7 @@ There are two types of PatternLock Available in this Package.
 2.FeaturedPatternLock
 
 
-# NormalPatternLock
+## NormalPatternLock
 
 ```js
 import { Dimensions } from 'react-native';
@@ -82,7 +82,7 @@ return(
 
 ```
 
-# FeaturedPatternLock
+## FeaturedPatternLock
 
 ```js
 import { Dimensions } from 'react-native';
