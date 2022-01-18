@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Dimensions, StyleSheet, View } from 'react-native';
 import {
-  PatternLock,
+  FeaturedPatternLock,
   NormalPatternLock,
 } from 'react-native-patternlock-authentication';
 
@@ -39,12 +39,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* <PatternLock
+      {/* <FeaturedPatternLock
         onPatternMatch={onPatternMatch}
         onWrongPattern={onWrongPattern}
         isChangePattern={false}
         processName="set_pattern"
       /> */}
+
       <NormalPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
