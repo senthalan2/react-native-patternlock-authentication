@@ -1,8 +1,8 @@
-import PatternLock from './PatternLockAuthentication/PatternLockAuthentication';
+import FeaturedPatternLock from './PatternLockAuthentication/FeaturedPatternLock';
 import NormalPatternLock from './PatternLockAuthentication/NormalPatternLock';
 import PatternProcess from './PatternLockAuthentication/PatternProcess';
 module.exports = {
-  PatternLock,
+  FeaturedPatternLock,
   NormalPatternLock,
   PatternProcess,
 };

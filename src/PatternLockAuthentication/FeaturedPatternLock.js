@@ -27,7 +27,7 @@ type Coordinate = {
   y: number,
 };
 
-type Props = typeof PatternLock.defaultProps & {
+type Props = typeof FeaturedPatternLock.defaultProps & {
   containerDimension: number,
   containerWidth: number,
   containerHeight: number,
@@ -60,6 +60,8 @@ type Props = typeof PatternLock.defaultProps & {
   changePatternDelayTime: Number,
   changePatternSecondMessage: String,
   isEnableHeadingText: Boolean,
+  enableDotsJoinViration: Boolean,
+  vibrationPattern: Array,
   headingText: String,
   enablePatternNotSameCondition: Boolean,
   patternTotalCountReachedErrorMessage: String,
@@ -73,6 +75,8 @@ type Props = typeof PatternLock.defaultProps & {
   hintTextContainerStyle: StyleProp<ViewStyle>,
   onPatternMatch: () => boolean,
   onWrongPattern: () => boolean,
+  onPatternMatchAfterDelay: () => Boolean,
+  onWrongPatternAfterDelay: () => Boolean,
 };
 
 type State = {
@@ -88,9 +92,7 @@ type State = {
   processName: String,
 };
 
-const VIBE_PATTERN = [0, 200];
-
-export default class PatternLock extends React.Component<Props, State> {
+export default class FeaturedPatternLock extends React.Component<Props, State> {
   _panResponder: { panHandlers: Object };
   _activeLine: ?Object;
   _dots: Array<Coordinate>;
@@ -111,8 +113,10 @@ export default class PatternLock extends React.Component<Props, State> {
     containerHeight: height / 2,
     processName: PatternProcess.NEW_PATTERN,
     isChangePattern: false,
+    enableDotsJoinViration: false,
     showHintMessage: false,
     dotRadius: 10,
+    vibrationPattern: [0, 200],
     dotsColor: 'red',
     movingLineColor: 'blue',
     snapDotRadius: 15,
@@ -205,10 +209,14 @@ export default class PatternLock extends React.Component<Props, State> {
           this._dots
         );
 
-        // Vibration.cancel();
+        if (this.props.enableDotsJoinViration) {
+          Vibration.cancel();
+        }
 
         if (activeDotIndex != null) {
-          // Vibration.vibrate(VIBE_PATTERN);
+          if (this.props.enableDotsJoinViration) {
+            Vibration.vibrate(this.props.vibrationPattern);
+          }
           let activeDotCoordinate = this._dots[activeDotIndex];
           let firstDot = this._mappedDotsIndex[activeDotIndex];
           let dotWillSnap = this._snapAnimatedValues[activeDotIndex];
@@ -256,7 +264,9 @@ export default class PatternLock extends React.Component<Props, State> {
           };
 
           let intermediateDotIndexes = [];
-          // Vibration.vibrate(VIBE_PATTERN);
+          if (this.props.enableDotsJoinViration) {
+            Vibration.vibrate(this.props.vibrationPattern);
+          }
           if (pattern.length > 0) {
             intermediateDotIndexes = getIntermediateDotIndexes(
               pattern[pattern.length - 1],
@@ -319,6 +329,7 @@ export default class PatternLock extends React.Component<Props, State> {
                     hintText: this.props.correctPatternDelayDurationMessage,
                   },
                   () => {
+                    this.props.onPatternMatch(pattern);
                     this._patternMatchedTimeout = setTimeout(() => {
                       this.setState({
                         showHint: true,
@@ -327,7 +338,10 @@ export default class PatternLock extends React.Component<Props, State> {
                         matched: false,
                         pattern: [],
                       });
-                      this.props.onPatternMatch(pattern);
+
+                      if (this.props.onPatternMatchAfterDelay) {
+                        this.props.onPatternMatchAfterDelay(pattern);
+                      }
                     }, this.props.correctPatternDelayTime);
                   }
                 );
@@ -342,6 +356,10 @@ export default class PatternLock extends React.Component<Props, State> {
                     hintText: '',
                   },
                   () => {
+                    if (this.state.changePatternConfirm) {
+                      this.props.onPatternMatch(pattern);
+                    }
+
                     this.setState({
                       showHint: true,
                       hintText: this.props.correctPatternMessage,
@@ -364,7 +382,9 @@ export default class PatternLock extends React.Component<Props, State> {
                           },
                           () => {
                             if (this.state.changePatternConfirm) {
-                              this.props.onPatternMatch(pattern);
+                              if (this.props.onPatternMatchAfterDelay) {
+                                this.props.onPatternMatchAfterDelay(pattern);
+                              }
                             }
                           }
                         );
@@ -408,6 +428,10 @@ export default class PatternLock extends React.Component<Props, State> {
                             : this.props.wrongPatternDelayDurationMessage
                           : this.props.minPatternLengthErrorMessage,
                     });
+                    this.props.onWrongPattern(
+                      pattern,
+                      WRONGPATTERN_TOTAL_COUNT
+                    );
                     this._resetTimeout = setTimeout(() => {
                       this.setState(
                         {
@@ -421,10 +445,12 @@ export default class PatternLock extends React.Component<Props, State> {
                           pattern: [],
                         },
                         () => {
-                          this.props.onWrongPattern(
-                            pattern,
-                            WRONGPATTERN_TOTAL_COUNT
-                          );
+                          if (this.props.onWrongPatternAfterDelay) {
+                            this.props.onWrongPatternAfterDelay(
+                              pattern,
+                              WRONGPATTERN_TOTAL_COUNT
+                            );
+                          }
                         }
                       );
                     }, this.props.wrongPatternDelayTime);
