@@ -71,7 +71,7 @@ return(
         onPatternMatchAfterDelay={onPatternMatchAfterDelay}
         onWrongPattern={onWrongPattern}
         
-        // ...Remaining Props
+        // ...Use Remaining Props as per your convenience
         
       />
 
