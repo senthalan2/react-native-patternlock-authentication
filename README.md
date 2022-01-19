@@ -81,7 +81,7 @@ return(
 }
 
 ```
-## Props
+### Props
 
 
 Props | Type | Required | Default
@@ -103,6 +103,13 @@ hint | String | No
 hintContainerStyle | ViewStyle | No 
 hintTextStyle | TextStyle | No | { color: '#000000' }    
 matchedPatternColor | String | No | green   
+
+### Methods
+
+```onPatternMatch```
+```onWrongPattern```
+```onPatternMatchAfterDelay```
+```onWrongPatternAfterDelay```
 
 
 ## FeaturedPatternLock
