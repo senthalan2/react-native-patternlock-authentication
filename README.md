@@ -91,8 +91,18 @@ containerWidth | Number | No | Dimensions.get('window').width
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes |  
 wrongPatternDelayTime | Number | No | 1000
-
-
+correctPatternDelayTime | Number | No | 0    
+dotsAndLineColor | String | No | blue   
+wrongPatternColor | String | No | red
+lineStrokeWidth | Number | No | 5 
+defaultDotRadius | Number | No | 6
+snapDotRadius | Number | No | 10    
+snapDuration | Number | No | 100   
+enableHint | Boolean | No | false
+hint | String | No 
+hintContainerStyle | ViewStyle | No 
+hintTextStyle | TextStyle | No | { color: '#000000' }    
+matchedPatternColor | String | No | green   
 
 
 ## FeaturedPatternLock
