@@ -90,7 +90,7 @@ containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Do
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes |  
-wrongPatternDelayTime | Number | No | 1000
+wrongPatternDelayTime | Number | No | 1000 | It is in MilliSeconds. If the value is 1000, can't draw the pattern for 1000 milliseconds after the Wrong Pattern Event
 correctPatternDelayTime | Number | No | 0    
 dotsAndLineColor | String | No | blue   
 wrongPatternColor | String | No | red
