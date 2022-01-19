@@ -94,7 +94,7 @@ wrongPatternDelayTime | Number | No | 1000
 correctPatternDelayTime | Number | No | 0    
 dotsAndLineColor | String | No | blue   
 wrongPatternColor | String | No | red
-lineStrokeWidth | Number | No | 5 
+lineStrokeWidth | Number | No | 5 | Thickness of Line
 defaultDotRadius | Number | No | 6
 snapDotRadius | Number | No | 10    
 snapDuration | Number | No | 100   
