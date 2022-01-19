@@ -84,13 +84,13 @@ return(
 ## Props
 
 
-props | type | Required | Default
+Props | Type | Required | Default
 --- | --- | --- | ---  
-channelId | String | Yes   
-channelName | String | Yes   
-displayTexts | String Array | No | ["b1","b2","b3","b4","b5"]
-exitEnabled | Boolean | No |  true
-icon | String | No | "app-icon"
+containerDimension | Number | No | 3    
+containerWidth | Number | No | Dimensions.get('window').width   
+containerHeight | Number | No | (Dimensions.get('window').height)/2
+correctPattern | String | Yes |  
+wrongPatternDelayTime | Number | No | 1000
 
 
 
