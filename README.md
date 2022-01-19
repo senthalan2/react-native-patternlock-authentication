@@ -84,9 +84,9 @@ return(
 ### Props
 
 
-Props | Type | Required | Default
+Props | Type | Required | Default | Description
 --- | --- | --- | ---  
-containerDimension | Number | No | 3    
+containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg)3 means 3 x 3, 4 means 4 x 4    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes |  
