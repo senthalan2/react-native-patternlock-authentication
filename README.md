@@ -10,35 +10,170 @@ npm install react-native-patternlock-authentication
 
 ## Usage
 
+There are two types of PatternLock Available in this Package.
+1.NormalPatternLock
+2.FeaturedPatternLock
+
+
+## NormalPatternLock
+
 ```js
-import { PatternLock } from "react-native-patternlock-authentication";
+import { Dimensions } from 'react-native';
+
+// ....
+
+import { NormalPatternLock } from 'react-native-patternlock-authentication';  // Import Package
+
+const { width, height } = Dimensions.get('window');
+const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
+const PATTERN_CONTAINER_WIDTH = width;         //you can change it as per your need
+const PATTERN_DIMENSION = 3;                   //you can change it as per your need
+const CORRECT_UNLOCK_PATTERN = '0123'          //Correct Pattern
 
 // ...
 
-const onPatternMatch = (matchedPattern) => {
+export const App = () => {
 
-  //Do your Functionlities
+  const onPatternMatch = () => {
+    // Do your Functionalities
+  };
 
-}
+  const onWrongPattern = () => {
+    // Do your Functionalities
+  };
 
-const onWrongPattern = (pattern,remainingWrongPatternCounts) => {   //remainingPatternCount return when you enable the wrong pattern limitation
+  const onPatternMatchAfterDelay = () => {
+    // Do your Functionalities
+  };
 
-//Do Your Functionlities
+  const onWrongPatternAfterDelay = () => {
+   // Do your Functionalities
+  };
 
-}
 
 return(
 //...
 
-<PatternLock
-onPatternMatch = {onPatternMatch}
-onWrongPattern = {onWrongPattern}
-{...restProps}  //use Rest of available props according to your convenience
-/>
+<NormalPatternLock
+        containerDimension={PATTERN_DIMENSION}
+        containerWidth={PATTERN_CONTAINER_WIDTH}
+        containerHeight={PATTERN_CONTAINER_HEIGHT}
+        correctPattern={CORRECT_UNLOCK_PATTERN}
+        dotsAndLineColor="blue"
+        defaultDotRadius={10}
+        snapDotRadius={15}
+        snapDuration={100}
+        lineStrokeWidth={5}
+        wrongPatternColor="red"
+        matchedPatternColor="green"
+        onPatternMatch={onPatternMatch}
+        onWrongPatternAfterDelay={onWrongPatternAfterDelay}          
+        onPatternMatchAfterDelay={onPatternMatchAfterDelay}
+        onWrongPattern={onWrongPattern}
+        
+        // ...Use Remaining Props as per your convenience
+        
+      />
 
 //...
 
 )
+}
+
+```
+### Props
+
+
+Props | Type | Required | Default
+--- | --- | --- | ---  
+containerDimension | Number | No | 3    
+containerWidth | Number | No | Dimensions.get('window').width   
+containerHeight | Number | No | (Dimensions.get('window').height)/2
+correctPattern | String | Yes |  
+wrongPatternDelayTime | Number | No | 1000
+correctPatternDelayTime | Number | No | 0    
+dotsAndLineColor | String | No | blue   
+wrongPatternColor | String | No | red
+lineStrokeWidth | Number | No | 5 
+defaultDotRadius | Number | No | 6
+snapDotRadius | Number | No | 10    
+snapDuration | Number | No | 100   
+enableHint | Boolean | No | false
+hint | String | No 
+hintContainerStyle | ViewStyle | No 
+hintTextStyle | TextStyle | No | { color: '#000000' }    
+matchedPatternColor | String | No | green   
+
+### Methods
+
+```onPatternMatch```
+
+It will call, when the Pattern is Matched with Correct Pattern,
+
+```onWrongPattern```
+
+It will call, when the Pattern is Matched with Wrong Pattern,
+
+```onPatternMatchAfterDelay```
+
+It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you,
+
+```onWrongPatternAfterDelay```
+
+It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you,
+
+
+## FeaturedPatternLock
+
+```js
+import { Dimensions } from 'react-native';
+
+// ....
+
+import { FeaturedPatternLock } from 'react-native-patternlock-authentication'; // Import Package
+
+const { width, height } = Dimensions.get('window');
+const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
+const PATTERN_CONTAINER_WIDTH = width;         //you can change it as per your need
+const PATTERN_DIMENSION = 3;                   //you can change it as per your need
+
+// ...
+
+export const App = () => {
+
+  const onPatternMatch = () => {
+    // Do your Functionalities
+  };
+
+  const onWrongPattern = () => {
+    // Do your Functionalities
+  };
+
+  const onPatternMatchAfterDelay = () => {
+    // Do your Functionalities
+  };
+
+  const onWrongPatternAfterDelay = () => {
+   // Do your Functionalities
+  };
+
+
+return(
+//...
+      
+      <FeaturedPatternLock
+        onPatternMatch={onPatternMatch}
+        onWrongPattern={onWrongPattern}
+        isChangePattern={false}
+        processName={PatternProcess.NEW_PATTERN}
+        
+        // ...Use Remaining Props as per your convenience
+      />
+
+//...
+
+)
+}
 
 ```
 
