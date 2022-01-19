@@ -107,9 +107,20 @@ matchedPatternColor | String | No | green
 ### Methods
 
 ```onPatternMatch```
+
+It will call, when the Pattern is Matched with Correct Pattern,
+
 ```onWrongPattern```
+
+It will call, when the Pattern is Matched with Wrong Pattern,
+
 ```onPatternMatchAfterDelay```
+
+It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you,
+
 ```onWrongPatternAfterDelay```
+
+It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you,
 
 
 ## FeaturedPatternLock
