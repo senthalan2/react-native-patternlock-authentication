@@ -81,6 +81,18 @@ return(
 }
 
 ```
+## Props
+```onPressButton```
+
+When Clicking the Button on Notification Service, 
+it will call and returns the name of button as Parameter, which you clicked.
+
+Type | Required  
+--- | ---  
+function | Yes 
+
+
+
 
 ## FeaturedPatternLock
 
