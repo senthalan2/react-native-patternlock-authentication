@@ -1,10 +1,10 @@
 import FeaturedPatternLock from './PatternLockAuthentication/FeaturedPatternLock';
 import NormalPatternLock from './PatternLockAuthentication/NormalPatternLock';
-import PatternProcess from './PatternLockAuthentication/PatternProcess';
 module.exports = {
   FeaturedPatternLock,
   NormalPatternLock,
-  PatternProcess,
+  PatternProcess: {
+    CONFIRM_PATTERN: 'confirm_pattern',
+    NEW_PATTERN: 'set_pattern',
+  },
 };
-
-export { PatternProcess };

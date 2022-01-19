@@ -17,6 +17,7 @@ import {
   populateDotsCoordinate,
   getDotIndex,
   getIntermediateDotIndexes,
+  getCorrectPatterninArray,
 } from './Helpers';
 
 type Coordinate = {
@@ -28,7 +29,7 @@ type Props = typeof NormalPatternLock.defaultProps & {
   containerDimension: number,
   containerWidth: number,
   containerHeight: number,
-  correctPattern: Array<Coordinate>,
+  correctPattern: String,
   wrongPatternDelayTime: Number,
   correctPatternDelayTime: Number,
   dotsAndLineColor: String,
@@ -397,12 +398,14 @@ export default class NormalPatternLock extends React.Component<Props, State> {
 
   _isPatternMatched(currentPattern: Array<Coordinate>) {
     let { correctPattern } = this.props;
-    if (currentPattern.length !== correctPattern.length) {
+    if (
+      currentPattern.length !== getCorrectPatterninArray(correctPattern).length
+    ) {
       return false;
     }
     let matched = true;
     for (let index = 0; index < currentPattern.length; index++) {
-      let correctDot = correctPattern[index];
+      let correctDot = getCorrectPatterninArray(correctPattern)[index];
       let currentDot = currentPattern[index];
       if (correctDot.x !== currentDot.x || correctDot.y !== currentDot.y) {
         matched = false;

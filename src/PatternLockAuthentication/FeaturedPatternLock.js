@@ -31,7 +31,7 @@ type Props = typeof FeaturedPatternLock.defaultProps & {
   containerDimension: number,
   containerWidth: number,
   containerHeight: number,
-  correctPattern: Array<Coordinate>,
+  correctPattern: String,
   processName: String,
   isChangePattern: boolean,
   showHintMessage: Boolean,
@@ -539,7 +539,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             } else {
               if (
                 (this.props.enablePatternNotSameCondition &&
-                  getCorrectPatterninString(this.props.correctPattern) ===
+                  this.props.correctPattern ===
                     getCorrectPatterninString(pattern)) ||
                 pattern.length < this.props.minPatternLength
               ) {
@@ -757,10 +757,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
   }
 
   _isSamePattern = (pattern: Coordinate) => {
-    if (
-      getCorrectPatterninString(pattern) ===
-      getCorrectPatterninString(this.props.correctPattern)
-    ) {
+    if (getCorrectPatterninString(pattern) === this.props.correctPattern) {
       return true;
     }
     return false;
