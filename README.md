@@ -86,18 +86,18 @@ return(
 
 Props | Type | Required | Default | Description
 --- | --- | --- | --- | --- 
-containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4    
+containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes |  
-wrongPatternDelayTime | Number | No | 1000 | It is in MilliSeconds. If the value is 1000, can't draw the pattern for 1000 milliseconds after the Wrong Pattern Event
-correctPatternDelayTime | Number | No | 0    
-dotsAndLineColor | String | No | blue   
-wrongPatternColor | String | No | red
+wrongPatternDelayTime | Number (MilliSeconds) | No | 1000 | Pattern draw event disable duration after the Wrong Pattern.  
+correctPatternDelayTime | Number | No | 0 | Pattern draw event disable duration after the Correct Pattern.   
+dotsAndLineColor | String | No | blue    
+wrongPatternColor | String | No | red 
 lineStrokeWidth | Number | No | 5 | Thickness of Line
 defaultDotRadius | Number | No | 6
-snapDotRadius | Number | No | 10    
-snapDuration | Number | No | 100   
+snapDotRadius | Number | No | 10 | Snaping radius of Dots When Connecting the Dots.    
+snapDuration | Number | No | 100 | Snaping duration of Dots When Connecting the Dots.  
 enableHint | Boolean | No | false
 hint | String | No 
 hintContainerStyle | ViewStyle | No 
