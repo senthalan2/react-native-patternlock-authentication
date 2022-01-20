@@ -11,18 +11,18 @@ npm install react-native-patternlock-authentication
 ## Usage
 
 There are two types of PatternLock Available in this Package.
-1.NormalPatternLock
+1.GeneralPatternLock
 2.FeaturedPatternLock
 
 
-## NormalPatternLock
+## GeneralPatternLock
 
 ```js
 import { Dimensions } from 'react-native';
 
 // ....
 
-import { NormalPatternLock } from 'react-native-patternlock-authentication';  // Import Package
+import { GeneralPatternLock } from 'react-native-patternlock-authentication';  // Import Package
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
@@ -54,7 +54,7 @@ export const App = () => {
 return(
 //...
 
-<NormalPatternLock
+<GeneralPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
         containerHeight={PATTERN_CONTAINER_HEIGHT}
@@ -125,12 +125,18 @@ It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongP
 
 ## FeaturedPatternLock
 
+It includes all Pattern Authentication Process like,
+
+1. Confirm Your Pattern,
+2. Change Pattern
+3. Set New Pattern
+
 ```js
 import { Dimensions } from 'react-native';
 
 // ....
 
-import { FeaturedPatternLock } from 'react-native-patternlock-authentication'; // Import Package
+import { FeaturedPatternLock, PatternProcess } from 'react-native-patternlock-authentication'; // Import Package
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
@@ -176,6 +182,58 @@ return(
 }
 
 ```
+
+### Props
+
+
+Props | Type | Required | Default | Description
+--- | --- | --- | --- | ----- 
+containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
+containerWidth | Number | No | Dimensions.get('window').width   
+containerHeight | Number | No | (Dimensions.get('window').height)/2
+correctPattern | String | Yes - when confirmPattern and ChangePattern/nNo - when setPattern
+processName | String,
+  isChangePattern | boolean
+  showHintMessage | Boolean
+  dotRadius  Number
+  dotsColor | String
+  movingLineColor | String
+  snapDotRadius | Number
+  lineStrokeWidth | String
+  activeLineColor | String
+  wrongPatternColor | String
+  snapDuration | Number
+  connectedDotsColor | String
+  correctPatternColor | Number
+  minPatternLength | Number
+  newPatternConfirmationMessage | String
+  wrongPatternDelayTime | Number
+  correctPatternMessage | String
+  correctPatternDelayTime | Number
+  correctPatternDelayDurationMessage | String
+  iswrongPatternCountLimited | Boolean
+  totalWrongPatternCount | Number
+  wrongPatternDelayDurationMessage | String
+  minPatternLengthErrorMessage | String
+  wrongPatternMessage | String
+  changePatternFirstMessage | String
+  changePatternDelayTime | Number
+  changePatternSecondMessage | String
+  isEnableHeadingText | Boolean
+  enableDotsJoinViration | Boolean
+  vibrationPattern | Array
+  headingText | String
+  enablePatternNotSameCondition | Boolean
+  patternTotalCountReachedErrorMessage | String
+  newPatternDelayDurationMessage | String
+  newPatternMatchedMessage | String
+  newPatternDelayTime | Number
+  patternCountLimitedErrorMessage | String
+  samePatternMatchedMessage | String
+  hintTextStyle | TextStyle
+  headingTextStyle | TextStyle
+  hintTextContainerStyle | ViewStyle
+
 
 ## Contributing
 
