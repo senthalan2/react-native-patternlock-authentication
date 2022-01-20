@@ -192,8 +192,8 @@ containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Do
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
-processName | String,
-isChangePattern | boolean
+processName | String | No | PatternProcess.NEW_PATTERN 
+isChangePattern | boolean 
 showHintMessage | Boolean
 dotRadius  Number
 dotsColor | String
