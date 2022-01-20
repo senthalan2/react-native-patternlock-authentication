@@ -85,7 +85,7 @@ return(
 
 
 Props | Type | Required | Default | Description
---- | --- | --- | --- | ----- 
+--- | --- | --- | -- | ------ 
 containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
@@ -191,7 +191,7 @@ Props | Type | Required | Default | Description
 containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
-correctPattern | String | Yes - when confirmPattern and ChangePattern/nNo - when setPattern
+correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
 processName | String,
   isChangePattern | boolean
   showHintMessage | Boolean
