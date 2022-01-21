@@ -195,7 +195,7 @@ correctPattern | String | Yes - when confirmPattern and ChangePattern No - when 
 processName | String | No | PatternProcess.NEW_PATTERN 
 isChangePattern | boolean | No | false
 showHintMessage | Boolean | No | false
-dotRadius  Number | No | 10 
+dotRadius | Number | No | 10 
 dotsColor | String | No | red
 movingLineColor | String | No | blue
 snapDotRadius | Number | No | 15
@@ -222,17 +222,17 @@ changePatternSecondMessage | String | No | Empty String
 isEnableHeadingText | Boolean | No | false
 enableDotsJoinViration | Boolean | No | false
 vibrationPattern | Array | No | [0, 200]
-headingText | String | No
-enablePatternNotSameCondition | Boolean | No
-patternTotalCountReachedErrorMessage | String | No
-newPatternDelayDurationMessage | String | No
-newPatternMatchedMessage | String | No
-newPatternDelayTime | Number | No
-patternCountLimitedErrorMessage | String | No
-samePatternMatchedMessage | String | No
-hintTextStyle | TextStyle | No
-headingTextStyle | TextStyle | No
-hintTextContainerStyle | ViewStyle | No
+headingText | String | No | Empty String
+enablePatternNotSameCondition | Boolean | No | true
+patternTotalCountReachedErrorMessage | String | No | Empty String
+newPatternDelayDurationMessage | String | No | Empty String
+newPatternMatchedMessage | String | No  | Empty String
+newPatternDelayTime | Number | No | 1000 (milli seconds)
+patternCountLimitedErrorMessage | String | No | Empty String
+samePatternMatchedMessage | String | No | Empty String
+hintTextStyle | TextStyle | No | { color: 'blue' }
+headingTextStyle | TextStyle | No | { color: 'blue' }
+hintTextContainerStyle | ViewStyle | No | { alignItems: 'center' }
 
 
 ## Contributing
