@@ -187,52 +187,52 @@ return(
 
 
 Props | Type | Required | Default | Description
---- | --- | --- | -- | ----- 
+--- | --- | --- | --- | ----- 
 containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
 processName | String | No | PatternProcess.NEW_PATTERN 
-isChangePattern | boolean 
-showHintMessage | Boolean
-dotRadius  Number
-dotsColor | String
-movingLineColor | String
-snapDotRadius | Number
-lineStrokeWidth | String
-activeLineColor | String
-wrongPatternColor | String
-snapDuration | Number
-connectedDotsColor | String
-correctPatternColor | Number
-minPatternLength | Number
-newPatternConfirmationMessage | String
-wrongPatternDelayTime | Number
-correctPatternMessage | String
-correctPatternDelayTime | Number
-correctPatternDelayDurationMessage | String
-iswrongPatternCountLimited | Boolean
-totalWrongPatternCount | Number
-wrongPatternDelayDurationMessage | String
-minPatternLengthErrorMessage | String
-wrongPatternMessage | String
-changePatternFirstMessage | String
-changePatternDelayTime | Number
-changePatternSecondMessage | String
-isEnableHeadingText | Boolean
-enableDotsJoinViration | Boolean
-vibrationPattern | Array
-headingText | String
-enablePatternNotSameCondition | Boolean
-patternTotalCountReachedErrorMessage | String
-newPatternDelayDurationMessage | String
-newPatternMatchedMessage | String
-newPatternDelayTime | Number
-patternCountLimitedErrorMessage | String
-samePatternMatchedMessage | String
-hintTextStyle | TextStyle
-headingTextStyle | TextStyle
-hintTextContainerStyle | ViewStyle
+isChangePattern | boolean | No | false
+showHintMessage | Boolean | No | false
+dotRadius  Number | No | 10 
+dotsColor | String | No | red
+movingLineColor | String | No | blue
+snapDotRadius | Number | No | 15
+lineStrokeWidth | String | No | 6
+activeLineColor | String | No | blue
+wrongPatternColor | String | No | red
+snapDuration | Number | No | 100 (milli seconds)
+connectedDotsColor | String | No | blue
+correctPatternColor | Number | No | green
+minPatternLength | Number | No | 3
+newPatternConfirmationMessage | String | No | Empty String
+wrongPatternDelayTime | Number | No | 1000 (milli seconds)
+correctPatternMessage | String | No | Empty String
+correctPatternDelayTime | Number | No | 1000 (milli seconds)
+correctPatternDelayDurationMessage | String | No | Empty String
+iswrongPatternCountLimited | Boolean | No | false
+totalWrongPatternCount | Number | No | 0
+wrongPatternDelayDurationMessage | String | No | Empty String
+minPatternLengthErrorMessage | String | No | Empty String
+wrongPatternMessage | String | No | Empty String
+changePatternFirstMessage | String | No | Empty String
+changePatternDelayTime | Number | No | 1000 (milli seconds)
+changePatternSecondMessage | String | No | Empty String
+isEnableHeadingText | Boolean | No | false
+enableDotsJoinViration | Boolean | No | false
+vibrationPattern | Array | No | [0, 200]
+headingText | String | No
+enablePatternNotSameCondition | Boolean | No
+patternTotalCountReachedErrorMessage | String | No
+newPatternDelayDurationMessage | String | No
+newPatternMatchedMessage | String | No
+newPatternDelayTime | Number | No
+patternCountLimitedErrorMessage | String | No
+samePatternMatchedMessage | String | No
+hintTextStyle | TextStyle | No
+headingTextStyle | TextStyle | No
+hintTextContainerStyle | ViewStyle | No
 
 
 ## Contributing
