@@ -108,19 +108,35 @@ matchedPatternColor | String | No | green
 
 ```onPatternMatch```
 
-It will call, when the Pattern is Matched with Correct Pattern,
+It will call, when the Pattern is Matched with Correct Pattern.
+
+Type | Required  
+--- | ---  
+function | Yes 
 
 ```onWrongPattern```
 
-It will call, when the Pattern is Matched with Wrong Pattern,
+It will call, when the Pattern is Matched with Wrong Pattern.
+
+Type | Required  
+--- | ---  
+function | No
 
 ```onPatternMatchAfterDelay```
 
-It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you,
+It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you.
+
+Type | Required  
+--- | ---  
+function | No
 
 ```onWrongPatternAfterDelay```
 
-It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you,
+It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you.
+
+Type | Required  
+--- | ---  
+function | No
 
 
 ## FeaturedPatternLock
