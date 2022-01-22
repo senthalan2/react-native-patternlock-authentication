@@ -1,6 +1,6 @@
 {
   "name": "react-native-patternlock-authentication",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "Pattern Lock Security for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,7 +25,6 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
@@ -34,7 +33,10 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "pattern-lock",
+    "security",
+    "authentication"
   ],
   "repository": "https://github.com/senthalan2/react-native-patternlock-authentication",
   "author": "Senthalan <senthalan2@gmail.com> (https://github.com/senthalan2)",
