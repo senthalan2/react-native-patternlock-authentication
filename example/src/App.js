@@ -41,6 +41,7 @@ export default function App() {
         headingText={'Set New Pattern'}
         headingTextStyle={{ alignSelf: 'center' }}
         minPatternLength={2}
+        enableDotsJoinViration={true}
       />
 
       {/* <GeneralPatternLock
