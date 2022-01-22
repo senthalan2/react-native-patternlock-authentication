@@ -25,7 +25,7 @@ type Coordinate = {
   y: number,
 };
 
-type Props = typeof NormalPatternLock.defaultProps & {
+type Props = typeof GeneralPatternLock.defaultProps & {
   containerDimension: number,
   containerWidth: number,
   containerHeight: number,
@@ -60,7 +60,7 @@ type State = {
 
 const { width, height } = Dimensions.get('window');
 
-export default class NormalPatternLock extends React.Component<Props, State> {
+export default class GeneralPatternLock extends React.Component<Props, State> {
   _panResponder: { panHandlers: Object };
   _activeLine: ?Object;
   _dots: Array<Coordinate>;

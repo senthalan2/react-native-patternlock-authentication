@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import {
   FeaturedPatternLock,
-  NormalPatternLock,
+  GeneralPatternLock,
   PatternProcess,
 } from 'react-native-patternlock-authentication';
 
@@ -32,14 +32,18 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* <FeaturedPatternLock
+      <FeaturedPatternLock
         onPatternMatch={onPatternMatch}
         onWrongPattern={onWrongPattern}
         isChangePattern={false}
         processName={PatternProcess.NEW_PATTERN}
-      /> */}
+        isEnableHeadingText
+        headingText={'Set New Pattern'}
+        headingTextStyle={{ alignSelf: 'center' }}
+        minPatternLength={2}
+      />
 
-      <NormalPatternLock
+      {/* <GeneralPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
         containerHeight={PATTERN_CONTAINER_HEIGHT}
@@ -57,7 +61,7 @@ export default function App() {
         onWrongPatternAfterDelay={onWrongPatternAfterDelay}
         onPatternMatchAfterDelay={onPatternMatchAfterDelay}
         onWrongPattern={onWrongPattern}
-      />
+      /> */}
     </View>
   );
 }

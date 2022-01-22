@@ -149,12 +149,10 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     newPatternDelayTime: 1000,
     patternCountLimitedErrorMessage: '',
     samePatternMatchedMessage: '',
-    hintTextStyle: { color: 'blue', alignSelf: 'center' },
-    headingTextStyle: { color: 'blue', alignSelf: 'center' },
+    hintTextStyle: { color: 'blue' },
+    headingTextStyle: { color: 'blue' },
     hintTextContainerStyle: {
       alignItems: 'center',
-      marginTop: 30,
-      flexWrap: 'wrap',
     },
   };
 
@@ -428,10 +426,13 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                             : this.props.wrongPatternDelayDurationMessage
                           : this.props.minPatternLengthErrorMessage,
                     });
-                    this.props.onWrongPattern(
-                      pattern,
-                      WRONGPATTERN_TOTAL_COUNT
-                    );
+                    if (this.props.onWrongPattern) {
+                      this.props.onWrongPattern(
+                        pattern,
+                        WRONGPATTERN_TOTAL_COUNT
+                      );
+                    }
+
                     this._resetTimeout = setTimeout(() => {
                       this.setState(
                         {
