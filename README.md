@@ -207,7 +207,7 @@ Props | Type | Required | Default | Description
 containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
-correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
+correctPattern | String | Yes - when ```processName``` is ```PatternProcess.CONFIRM_PATTERN```. No - when ```processName``` is ```PatternProcess.NEW_PATTERN```.
 processName | String | No | PatternProcess.NEW_PATTERN | ```PatternProcess``` Contains two processes. ```NEW_PATTERN``` and ```CONFIRM_PATTERN```. ```processName``` must be ```CONFIRM_PATTERN``` for Change Pattern Process
 isChangePattern | boolean | No | false | If the Pattern is working as Change Pattern then change it to ```true```
 showHintMessage | Boolean | No | false 
@@ -236,8 +236,8 @@ changePatternFirstMessage | String | No | Empty String
 changePatternDelayTime | Number | No | 1000 (milli seconds)
 changePatternSecondMessage | String | No | Empty String
 isEnableHeadingText | Boolean | No | false
-enableDotsJoinViration | Boolean | No | false | If it is true, then the mobile will be vibrate whenever the Pattern Dots Connects
-vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is true then the Mobile Vibrates in this Pattern [Refer React Native Vibration](https://reactnative.dev/docs/vibration)
+enableDotsJoinViration | Boolean | No | false | If it is ```true```, then the mobile will be vibrate whenever the Pattern Dots Connects
+vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is ```true``` then the Mobile Vibrates in this Pattern [Refer React Native Vibration](https://reactnative.dev/docs/vibration)
 headingText | String | No | Empty String
 enablePatternNotSameCondition | Boolean | No | true | If It is ```true```, then the previous Pattern is not allowed for new Pattern when the time of Change Pattern Process. Change it to ```false```, if the Previous Pattern is also allowed for New Pattern
 patternTotalCountReachedErrorMessage | String | No | Empty String
