@@ -1,6 +1,6 @@
 {
   "name": "react-native-patternlock-authentication",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Pattern Lock Security for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
