@@ -11,18 +11,18 @@ npm install react-native-patternlock-authentication
 ## Usage
 
 There are two types of PatternLock Available in this Package.
-1.NormalPatternLock
+1.GeneralPatternLock
 2.FeaturedPatternLock
 
 
-## NormalPatternLock
+## GeneralPatternLock
 
 ```js
 import { Dimensions } from 'react-native';
 
 // ....
 
-import { NormalPatternLock } from 'react-native-patternlock-authentication';  // Import Package
+import { GeneralPatternLock } from 'react-native-patternlock-authentication';  // Import Package
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
@@ -54,7 +54,7 @@ export const App = () => {
 return(
 //...
 
-<NormalPatternLock
+<GeneralPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
         containerHeight={PATTERN_CONTAINER_HEIGHT}
@@ -85,7 +85,7 @@ return(
 
 
 Props | Type | Required | Default | Description
---- | --- | --- | --- | --- 
+--- | --- | --- | -- | ------ 
 containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
@@ -108,29 +108,51 @@ matchedPatternColor | String | No | green
 
 ```onPatternMatch```
 
-It will call, when the Pattern is Matched with Correct Pattern,
+It will call, when the Pattern is Matched with Correct Pattern.
+
+Type | Required  
+--- | ---  
+function | Yes 
 
 ```onWrongPattern```
 
-It will call, when the Pattern is Matched with Wrong Pattern,
+It will call, when the Pattern is Matched with Wrong Pattern.
+
+Type | Required  
+--- | ---  
+function | No
 
 ```onPatternMatchAfterDelay```
 
-It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you,
+It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you.
+
+Type | Required  
+--- | ---  
+function | No
 
 ```onWrongPatternAfterDelay```
 
-It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you,
+It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you.
+
+Type | Required  
+--- | ---  
+function | No
 
 
 ## FeaturedPatternLock
+
+It includes all Pattern Authentication Process like,
+
+1. Confirm Your Pattern,
+2. Change Pattern
+3. Set New Pattern
 
 ```js
 import { Dimensions } from 'react-native';
 
 // ....
 
-import { FeaturedPatternLock } from 'react-native-patternlock-authentication'; // Import Package
+import { FeaturedPatternLock, PatternProcess } from 'react-native-patternlock-authentication'; // Import Package
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;   //you can change it as per your need
@@ -176,6 +198,101 @@ return(
 }
 
 ```
+
+### Props
+
+
+Props | Type | Required | Default | Description
+--- | --- | --- | --- | ----- 
+containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.    
+containerWidth | Number | No | Dimensions.get('window').width   
+containerHeight | Number | No | (Dimensions.get('window').height)/2
+correctPattern | String | Yes - when ```processName``` is ```PatternProcess.CONFIRM_PATTERN```. No - when ```processName``` is ```PatternProcess.NEW_PATTERN```.
+processName | String | No | PatternProcess.NEW_PATTERN | ```PatternProcess``` Contains two processes. ```NEW_PATTERN``` and ```CONFIRM_PATTERN```. ```processName``` must be ```CONFIRM_PATTERN``` for Change Pattern Process
+isChangePattern | boolean | No | false | If the Pattern is working as Change Pattern then change it to ```true```
+showHintMessage | Boolean | No | false 
+dotRadius | Number | No | 10 
+dotsColor | String | No | red
+movingLineColor | String | No | blue
+snapDotRadius | Number | No | 15 | Snaping radius of Dots When Connecting the Dots.
+lineStrokeWidth | String | No | 6
+activeLineColor | String | No | blue
+wrongPatternColor | String | No | red
+snapDuration | Number | No | 100 (milli seconds) | Snaping duration of Dots When Connecting the Dots.
+connectedDotsColor | String | No | blue
+correctPatternColor | Number | No | green
+minPatternLength | Number | No | 3
+newPatternConfirmationMessage | String | No | Empty String
+wrongPatternDelayTime | Number | No | 1000 (milli seconds)
+correctPatternMessage | String | No | Empty String
+correctPatternDelayTime | Number | No | 1000 (milli seconds)
+correctPatternDelayDurationMessage | String | No | Empty String
+iswrongPatternCountLimited | Boolean | No | false | If there is maximum limit of Wrong Pattern then change it to true
+totalWrongPatternCount | Number | No | 0 | If ```iswrongPatternCountLimited``` is true then give maximum limit of Wrong Pattern
+wrongPatternDelayDurationMessage | String | No | Empty String
+minPatternLengthErrorMessage | String | No | Empty String
+wrongPatternMessage | String | No | Empty String
+changePatternFirstMessage | String | No | Empty String
+changePatternDelayTime | Number | No | 1000 (milli seconds)
+changePatternSecondMessage | String | No | Empty String
+isEnableHeadingText | Boolean | No | false
+enableDotsJoinViration | Boolean | No | false | If it is ```true```, then the mobile will be vibrate whenever the Pattern Dots Connects
+vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is ```true``` then the Mobile Vibrates in this Pattern [Refer React Native Vibration](https://reactnative.dev/docs/vibration)
+headingText | String | No | Empty String
+enablePatternNotSameCondition | Boolean | No | true | If It is ```true```, then the previous Pattern is not allowed for new Pattern when the time of Change Pattern Process. Change it to ```false```, if the Previous Pattern is also allowed for New Pattern
+patternTotalCountReachedErrorMessage | String | No | Empty String
+newPatternDelayDurationMessage | String | No | Empty String
+newPatternMatchedMessage | String | No  | Empty String
+newPatternDelayTime | Number | No | 1000 (milli seconds)
+patternCountLimitedErrorMessage | String | No | Empty String
+samePatternMatchedMessage | String | No | Empty String
+hintTextStyle | TextStyle | No | { color: 'blue' }
+headingTextStyle | TextStyle | No | { color: 'blue' }
+hintTextContainerStyle | ViewStyle | No | { alignItems: 'center' }
+
+### Methods
+
+```onPatternMatch```
+
+It will call, when the Pattern is Matched with Correct Pattern.
+It will also called after the Confirm Pattern of Set Pattern Process.
+It returns ```pattern``` as callback Parameters.
+
+Type | Required  
+--- | ---  
+function | Yes 
+
+```onWrongPattern```
+
+It will call, whenever the Pattern is Matched with Wrong Pattern.
+It returns ```pattern``` and ```wrongPatternRemainingCount``` ( if enable ```iswrongPatternCountLimited``` )  as callback Parameters.
+
+Type | Required  
+--- | ---  
+function | No
+
+```onPatternMatchAfterDelay```
+
+It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you.
+It will also called after the Confirm Pattern of Set Pattern Process.
+It returns ```pattern``` as callback Parameters.
+
+Type | Required  
+--- | ---  
+function | No
+
+```onWrongPatternAfterDelay```
+
+It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you.
+It returns ```pattern``` and ```wrongPatternRemainingCount``` ( if enable ```iswrongPatternCountLimited``` )  as callback Parameters.
+
+Type | Required  
+--- | ---  
+function | No
+
+
+
+
 
 ## Contributing
 
