@@ -281,7 +281,7 @@ Type | Required
 --- | ---  
 function | No
 
-```onWrongPatternAfterDelay```
+``onWrongPatternAfterDelay``
 
 It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you.
 It returns ```pattern``` and ```wrongPatternRemainingCount``` ( if enable ```iswrongPatternCountLimited``` )  as callback Parameters.
