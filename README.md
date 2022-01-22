@@ -254,7 +254,9 @@ hintTextContainerStyle | ViewStyle | No | { alignItems: 'center' }
 
 ```onPatternMatch```
 
-It will call, when the Pattern is Matched with Correct Pattern. 
+It will call, when the Pattern is Matched with Correct Pattern.
+It will also called after the Confirm Pattern of Set Pattern Process.
+It returns ```pattern``` as callback Parameters.
 
 Type | Required  
 --- | ---  
@@ -262,7 +264,8 @@ function | Yes
 
 ```onWrongPattern```
 
-It will call, when the Pattern is Matched with Wrong Pattern.
+It will call, whenever the Pattern is Matched with Wrong Pattern.
+It returns ```pattern``` and ```wrongPatternRemainingCount``` ( if enable ```iswrongPatternCountLimited``` )  as callback Parameters.
 
 Type | Required  
 --- | ---  
@@ -271,6 +274,8 @@ function | No
 ```onPatternMatchAfterDelay```
 
 It will call, when the Pattern is Matched with Correct Pattern after the ```correctPatternDelayTime``` which is passed as prop by you.
+It will also called after the Confirm Pattern of Set Pattern Process.
+It returns ```pattern``` as callback Parameters.
 
 Type | Required  
 --- | ---  
@@ -279,6 +284,7 @@ function | No
 ```onWrongPatternAfterDelay```
 
 It will call, when the Pattern is Matched with Wrong Pattern after the ```wrongPatternDelayTime``` which is passed as prop by you.
+It returns ```pattern``` and ```wrongPatternRemainingCount``` ( if enable ```iswrongPatternCountLimited``` )  as callback Parameters.
 
 Type | Required  
 --- | ---  
