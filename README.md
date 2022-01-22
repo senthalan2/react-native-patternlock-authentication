@@ -250,6 +250,9 @@ hintTextStyle | TextStyle | No | { color: 'blue' }
 headingTextStyle | TextStyle | No | { color: 'blue' }
 hintTextContainerStyle | ViewStyle | No | { alignItems: 'center' }
 
+### Methods
+
+[Same like GeneralPattern](https://github.com/senthalan2/react-native-patternlock-authentication/edit/main/README.md#L107-L140)
 
 ## Contributing
 
