@@ -208,7 +208,7 @@ containerDimension | Number | No | 3 | It Refers the Dimension of the Pattern Do
 containerWidth | Number | No | Dimensions.get('window').width   
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
-processName | String | No | PatternProcess.NEW_PATTERN | ```PatternProcess``` Contains two process 1. NEW_PATTERN 2. CONFIRM_PATTERN. processName must be CONFIRM_PATTERN for Change Pattern Process
+processName | String | No | PatternProcess.NEW_PATTERN | ```PatternProcess``` Contains two processes. ```NEW_PATTERN``` and ```CONFIRM_PATTERN```. ```processName``` must be ```CONFIRM_PATTERN``` for Change Pattern Process
 isChangePattern | boolean | No | false
 showHintMessage | Boolean | No | false
 dotRadius | Number | No | 10 
