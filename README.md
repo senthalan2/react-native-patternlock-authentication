@@ -209,16 +209,16 @@ containerWidth | Number | No | Dimensions.get('window').width
 containerHeight | Number | No | (Dimensions.get('window').height)/2
 correctPattern | String | Yes - when confirmPattern and ChangePattern No - when setPattern
 processName | String | No | PatternProcess.NEW_PATTERN | ```PatternProcess``` Contains two processes. ```NEW_PATTERN``` and ```CONFIRM_PATTERN```. ```processName``` must be ```CONFIRM_PATTERN``` for Change Pattern Process
-isChangePattern | boolean | No | false
-showHintMessage | Boolean | No | false
+isChangePattern | boolean | No | false | If the Pattern is working as Change Pattern then change it to ```true```
+showHintMessage | Boolean | No | false 
 dotRadius | Number | No | 10 
 dotsColor | String | No | red
 movingLineColor | String | No | blue
-snapDotRadius | Number | No | 15
+snapDotRadius | Number | No | 15 | Snaping radius of Dots When Connecting the Dots.
 lineStrokeWidth | String | No | 6
 activeLineColor | String | No | blue
 wrongPatternColor | String | No | red
-snapDuration | Number | No | 100 (milli seconds)
+snapDuration | Number | No | 100 (milli seconds) | Snaping duration of Dots When Connecting the Dots.
 connectedDotsColor | String | No | blue
 correctPatternColor | Number | No | green
 minPatternLength | Number | No | 3
@@ -227,8 +227,8 @@ wrongPatternDelayTime | Number | No | 1000 (milli seconds)
 correctPatternMessage | String | No | Empty String
 correctPatternDelayTime | Number | No | 1000 (milli seconds)
 correctPatternDelayDurationMessage | String | No | Empty String
-iswrongPatternCountLimited | Boolean | No | false
-totalWrongPatternCount | Number | No | 0
+iswrongPatternCountLimited | Boolean | No | false | If there is maximum limit of Wrong Pattern then change it to true
+totalWrongPatternCount | Number | No | 0 | If ```iswrongPatternCountLimited``` is true then give maximum limit of Wrong Pattern
 wrongPatternDelayDurationMessage | String | No | Empty String
 minPatternLengthErrorMessage | String | No | Empty String
 wrongPatternMessage | String | No | Empty String
@@ -236,8 +236,8 @@ changePatternFirstMessage | String | No | Empty String
 changePatternDelayTime | Number | No | 1000 (milli seconds)
 changePatternSecondMessage | String | No | Empty String
 isEnableHeadingText | Boolean | No | false
-enableDotsJoinViration | Boolean | No | false
-vibrationPattern | Array | No | [0, 200]
+enableDotsJoinViration | Boolean | No | false | If it is true, then the mobile will be vibrate whenever the Pattern Dots Connects
+vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is true then the Mobile Vibrates in this Pattern [Refer This Page](https://reactnative.dev/docs/vibration)
 headingText | String | No | Empty String
 enablePatternNotSameCondition | Boolean | No | true
 patternTotalCountReachedErrorMessage | String | No | Empty String
