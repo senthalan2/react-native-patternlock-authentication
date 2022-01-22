@@ -237,9 +237,9 @@ changePatternDelayTime | Number | No | 1000 (milli seconds)
 changePatternSecondMessage | String | No | Empty String
 isEnableHeadingText | Boolean | No | false
 enableDotsJoinViration | Boolean | No | false | If it is true, then the mobile will be vibrate whenever the Pattern Dots Connects
-vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is true then the Mobile Vibrates in this Pattern [Refer This Page](https://reactnative.dev/docs/vibration)
+vibrationPattern | Array | No | [0, 200] | Pattern of Vibration for connecting Dots. If ```enableDotsJoinViration``` is true then the Mobile Vibrates in this Pattern [Refer React Native Vibration](https://reactnative.dev/docs/vibration)
 headingText | String | No | Empty String
-enablePatternNotSameCondition | Boolean | No | true
+enablePatternNotSameCondition | Boolean | No | true | If It is ```true```, then the previous Pattern is not allowed for new Pattern when the time of Change Pattern Process. Change it to ```false```, if the Previous Pattern is also allowed for New Pattern
 patternTotalCountReachedErrorMessage | String | No | Empty String
 newPatternDelayDurationMessage | String | No | Empty String
 newPatternMatchedMessage | String | No  | Empty String
