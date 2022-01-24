@@ -360,7 +360,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
 
                     this.setState({
                       showHint: true,
-                      hintText: this.props.correctPatternMessage,
+                      hintText: this.props.correctPatternDelayDurationMessage,
                       matched: true,
                     });
                     this._patternMatchedTimeout = setTimeout(
@@ -518,7 +518,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                     correctPattern: pattern,
                     showError: true,
                     showHint: true,
-                    hintText: this.props.correctPatternMessage,
+                    hintText: this.props.correctPatternDelayDurationMessage,
                     initialGestureCoordinate: null,
                     activeDotCoordinate: null,
                     matched: true,
