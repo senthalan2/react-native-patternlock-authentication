@@ -5,7 +5,6 @@ Pattern Lock Security for both Android and IOS using react native svg.
 
 ![Set New Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/SetNewPattern.gif)
 
-
 ![Change Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/ChangePattern.gif)
 
 ## Installation
