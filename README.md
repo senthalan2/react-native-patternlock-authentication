@@ -2,11 +2,6 @@
 
 Pattern Lock Security for both Android and IOS using react native svg.
 
-![GeneralPattern](https://user-images.githubusercontent.com/43330632/151011158-9731d4b4-5230-4b99-a3ab-f4de62cd9cf3.gif)
-![20220125_205730](https://user-images.githubusercontent.com/43330632/151012717-3430aab9-e140-45a0-a5bd-14fb41684951.gif)
-![20220125_205941](https://user-images.githubusercontent.com/43330632/151012732-d3012d18-475e-4f5f-a815-657bd722980f.gif)
-![20220125_210136](https://user-images.githubusercontent.com/43330632/151012788-54fcc9a9-9ab3-4e77-9588-d05c75952c41.gif)
-
 
 ## Installation
 
