@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import {
   FeaturedPatternLock,
   GeneralPatternLock,
@@ -14,37 +14,106 @@ const PATTERN_DIMENSION = 3;
 const CORRECT_UNLOCK_PATTERN = '0123';
 
 export default function App() {
+  const [hint, sethint] = React.useState('Current Pattern is "0123"');
+
   const onPatternMatch = () => {
-    console.log('onPatternMatch');
+    sethint('Pattern Matched');
   };
 
   const onWrongPattern = () => {
-    console.log('onWrongPattern');
+    sethint('Wrong Pattern.Try Again.');
   };
 
   const onPatternMatchAfterDelay = () => {
-    console.log('onPatternMatchAfterDelay');
+    sethint('Unlocked');
   };
 
   const onWrongPatternAfterDelay = () => {
-    console.log('onWrongPatternAfterDelay');
+    sethint('Current Pattern is "0123"');
   };
 
   return (
     <View style={styles.container}>
-      <FeaturedPatternLock
-        onPatternMatch={onPatternMatch}
-        onWrongPattern={onWrongPattern}
+      {/* <FeaturedPatternLock
+        containerDimension={PATTERN_DIMENSION}
+        containerWidth={PATTERN_CONTAINER_WIDTH}
+        containerHeight={PATTERN_CONTAINER_HEIGHT}
+        correctPattern={'1573'}
+        processName={PatternProcess.CONFIRM_PATTERN}
         isChangePattern={false}
-        processName={PatternProcess.NEW_PATTERN}
-        isEnableHeadingText
-        headingText={'Set New Pattern'}
-        headingTextStyle={{ alignSelf: 'center' }}
-        minPatternLength={2}
-        enableDotsJoinViration={true}
-      />
-
-      {/* <GeneralPatternLock
+        showHintMessage={true}
+        dotRadius={10}
+        dotsColor={'blue'}
+        movingLineColor={'blue'}
+        snapDotRadius={15}
+        lineStrokeWidth={6}
+        activeLineColor={'blue'}
+        wrongPatternColor={'red'}
+        snapDuration={100}
+        connectedDotsColor={'blue'}
+        correctPatternColor={'green'}
+        minPatternLength={4}
+        newPatternConfirmationMessage={'Enter New Pattern again to Confirm'}
+        wrongPatternDelayTime={1000}
+        correctPatternMessage={'Unlocked Successfully.'}
+        correctPatternDelayTime={1000}
+        correctPatternDelayDurationMessage={'Pattern Matched'}
+        // iswrongPatternCountLimited = {false}
+        // totalWrongPatternCount = {}
+        wrongPatternDelayDurationMessage={'Wrong Pattern. Try Again.'}
+        minPatternLengthErrorMessage={
+          'Pattern Length should be greater than 3 '
+        }
+        wrongPatternMessage={'Re-Draw Your Pattern.'}
+        changePatternFirstMessage={'Enter Your New Pattern'}
+        changePatternDelayTime={1000}
+        changePatternSecondMessage={'Enter New Pattern again to Confirm'}
+        isEnableHeadingText={true}
+        enableDotsJoinViration={false}
+        // vibrationPattern = {}
+        headingText={'Confirm Pattern'}
+        enablePatternNotSameCondition={true}
+        // patternTotalCountReachedErrorMessage = {}
+        newPatternDelayDurationMessage={'Pattern Matched'}
+        newPatternMatchedMessage={'Unlocked Successfully.'}
+        newPatternDelayTime={1000}
+        // patternCountLimitedErrorMessage = {}
+        samePatternMatchedMessage={
+          'New Pattern should be different from Previous Pattern'
+        }
+        hintTextStyle={{
+          textAlign: 'center',
+          color: 'red',
+          fontSize: 14,
+        }}
+        headingTextStyle={{
+          textAlign: 'center',
+          color: 'blue',
+          fontSize: 16,
+          marginVertical: 30,
+        }}
+        hintTextContainerStyle={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: 10,
+        }}
+        onPatternMatch={onPatternMatch}
+        onWrongPatternAfterDelay={onWrongPatternAfterDelay}
+        onPatternMatchAfterDelay={onPatternMatchAfterDelay}
+        onWrongPattern={onWrongPattern}
+      /> */}
+      <Text
+        style={{
+          fontSize: 16,
+          color: 'blue',
+          textAlign: 'center',
+          alignSelf: 'center',
+          marginVertical: 20,
+        }}
+      >
+        Confirm Pattern
+      </Text>
+      <GeneralPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
         containerHeight={PATTERN_CONTAINER_HEIGHT}
@@ -62,7 +131,15 @@ export default function App() {
         onWrongPatternAfterDelay={onWrongPatternAfterDelay}
         onPatternMatchAfterDelay={onPatternMatchAfterDelay}
         onWrongPattern={onWrongPattern}
-      /> */}
+        enableHint={true}
+        hint={hint}
+        hintContainerStyle={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: 10,
+        }}
+        hintTextStyle={{ textAlign: 'center', color: 'red', fontSize: 14 }}
+      />
     </View>
   );
 }
