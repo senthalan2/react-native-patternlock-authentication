@@ -24,7 +24,8 @@ npm install react-native-patternlock-authentication
 
 There are two types of PatternLock Available in this Package.
 1.GeneralPatternLock
-![FeaturedPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#L150-L297)
+
+[FeaturedPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#L150-L297)
 <!-- FeaturedPatternLock -->
 
 
