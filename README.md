@@ -2,6 +2,15 @@
 
 Pattern Lock Security for both Android and IOS using react native svg.
 
+### Featured Pattern Working Gif
+
+![Set New Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/SetNewPattern.gif)
+![Change Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/ChangePattern.gif)
+![Confirm Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/ConfirmPattern.gif)
+
+### General Pattern Working Gif
+
+![General Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/GeneralPatternLockGifs/GeneralPattern.gif)
 
 ## Installation
 
@@ -14,8 +23,13 @@ npm install react-native-patternlock-authentication
 ## Usage
 
 There are two types of PatternLock Available in this Package.
-1.GeneralPatternLock
-2.FeaturedPatternLock
+1. [GeneralPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#generalpatternlock)
+
+2. [FeaturedPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#featuredpatternlock)
+
+<!-- [FeaturedPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#L150-L297) -->
+<!-- FeaturedPatternLock -->
+
 
 ## GeneralPatternLock
 
