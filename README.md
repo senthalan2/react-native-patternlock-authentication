@@ -2,6 +2,7 @@
 
 Pattern Lock Security for both Android and IOS using react native svg.
 
+
 ## Installation
 
 ```Note:``` To use this Authentication, ensure that you have ```react-native-svg``` and its dependencies ([follow this guide](https://www.npmjs.com/package/react-native-svg)).
@@ -20,6 +21,7 @@ There are two types of PatternLock Available in this Package.
 
 ```js
 import { Dimensions } from 'react-native';
+
 
 // ....
 
