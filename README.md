@@ -10,6 +10,8 @@ npm install react-native-patternlock-authentication
 
 ## Usage
 
+```Note:``` To use this Authentication, ensure that you have ```react-native-svg``` and its dependencies ([follow this guide](https://www.npmjs.com/package/react-native-svg)).
+
 There are two types of PatternLock Available in this Package.
 1.GeneralPatternLock
 2.FeaturedPatternLock
