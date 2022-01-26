@@ -304,4 +304,4 @@ MIT
 
 ## Would you like to support me?
 
-<a href="https://www.buymeacoffee.com/senthalan2"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=senthalan2&button_colour=FF5F5F&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"></a>
+<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="senthalan2" data-color="#FF5F5F" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
