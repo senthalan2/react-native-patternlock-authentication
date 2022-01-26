@@ -298,10 +298,10 @@ It returns `pattern` and `wrongPatternRemainingCount` ( if enable `iswrongPatter
 | -------- | -------- |
 | function | No       |
 
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
 ## License
 
 MIT
+
+## Would you like to support me?
+
+<a href="https://www.buymeacoffee.com/senthalan2" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
