@@ -86,6 +86,6 @@ declare module "react-native-patternlock-authentication" {
     declare const FeaturedPatternLock: React.SFC<FeaturedPatternLockProps>;
     declare const PatternProcess: PatternProcessProps
 
-    export { FeaturedPatternLock, GeneralPatternLock, PatternProcess }
+    export const { FeaturedPatternLock, GeneralPatternLock, PatternProcess }
 
 }
