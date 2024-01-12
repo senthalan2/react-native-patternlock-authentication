@@ -19,9 +19,9 @@ declare module "react-native-patternlock-authentication" {
         hintContainerStyle?: StyleProp<ViewStyle>,
         hintTextStyle?: StyleProp<TextStyle>,
         matchedPatternColor?: string,
-        onPatternMatchAfterDelay: () => void,
-        onWrongPatternAfterDelay: () => void,
-        onWrongPattern: () => void,
+        onPatternMatchAfterDelay?: () => void,
+        onWrongPatternAfterDelay?: () => void,
+        onWrongPattern?: () => void,
         onPatternMatch: () => void,
     }
 
@@ -72,9 +72,9 @@ declare module "react-native-patternlock-authentication" {
         headingTextStyle?: StyleProp<TextStyle>,
         hintTextContainerStyle?: StyleProp<ViewStyle>,
         onPatternMatch: () => void,
-        onWrongPattern: () => void,
-        onPatternMatchAfterDelay: () => void,
-        onWrongPatternAfterDelay: () => void,
+        onWrongPattern?: () => void,
+        onPatternMatchAfterDelay?: () => void,
+        onWrongPatternAfterDelay?: () => void,
     }
 
     export type PatternProcessProps = {
