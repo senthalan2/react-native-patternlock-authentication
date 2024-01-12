@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <FeaturedPatternLock
+      {/* <FeaturedPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
         containerHeight={PATTERN_CONTAINER_HEIGHT}
@@ -101,7 +101,7 @@ export default function App() {
         onWrongPatternAfterDelay={onWrongPatternAfterDelay}
         onPatternMatchAfterDelay={onPatternMatchAfterDelay}
         onWrongPattern={onWrongPattern}
-      />
+      /> */}
       <Text
         style={{
           fontSize: 16,

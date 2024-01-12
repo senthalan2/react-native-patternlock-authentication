@@ -82,9 +82,9 @@ declare module "react-native-patternlock-authentication" {
         NEW_PATTERN: 'set_pattern',
     }
 
-    declare const GeneralPatternLock: React.SFC<GeneralPatternLockProps>;
-    declare const FeaturedPatternLock: React.SFC<FeaturedPatternLockProps>;
-    declare const PatternProcess: PatternProcessProps
+    const GeneralPatternLock: React.SFC<GeneralPatternLockProps>;
+    const FeaturedPatternLock: React.SFC<FeaturedPatternLockProps>;
+    const PatternProcess: PatternProcessProps
 
     export const { FeaturedPatternLock, GeneralPatternLock, PatternProcess }
 
