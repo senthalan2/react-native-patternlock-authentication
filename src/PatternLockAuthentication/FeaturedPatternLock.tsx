@@ -7,6 +7,10 @@ import {
   PanResponder,
   Vibration,
   Dimensions,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+  ColorValue,
 } from 'react-native';
 
 import Svg, { Line, Circle } from 'react-native-svg';
@@ -23,91 +27,89 @@ import { PatternProcess } from './PatternProcess';
 const { width, height } = Dimensions.get('window');
 
 type Coordinate = {
-  x: number,
-  y: number,
+  x: number;
+  y: number;
 };
 
-type Props = typeof FeaturedPatternLock.defaultProps & {
-  containerDimension: number,
-  containerWidth: number,
-  containerHeight: number,
-  correctPattern: string,
-  processName: string,
-  isChangePattern: boolean,
-  showHintMessage: boolean,
-  dotRadius: number,
-  dotsColor: string,
-  movingLineColor: string,
-  snapDotRadius: number,
-  lineStrokeWidth: string,
-  activeLineColor: string,
-  wrongPatternColor: string,
-  snapDuration: number,
-  connectedDotsColor: string,
-  correctPatternColor: string,
-  minPatternLength: number,
-  newPatternConfirmationMessage: string,
-  wrongPatternDelayTime: number,
-  correctPatternMessage: string,
-  correctPatternDelayTime: number,
-  correctPatternDelayDurationMessage: string,
-  iswrongPatternCountLimited: boolean,
-  totalWrongPatternCount: number,
-  wrongPatternDelayDurationMessage: string,
-  minPatternLengthErrorMessage: string,
-  wrongPatternMessage: string,
-  changePatternFirstMessage: string,
-  changePatternDelayTime: number,
-  changePatternSecondMessage: string,
-  isEnableHeadingText: boolean,
-  enableDotsJoinViration: boolean,
-  vibrationPattern: Array,
-  headingText: string,
-  enablePatternNotSameCondition: boolean,
-  patternTotalCountReachedErrorMessage: string,
-  newPatternDelayDurationMessage: string,
-  newPatternMatchedMessage: string,
-  newPatternDelayTime: number,
-  patternCountLimitedErrorMessage: string,
-  samePatternMatchedMessage: string,
-  hintTextStyle: StyleProp<TextStyle>,
-  headingTextStyle: StyleProp<TextStyle>,
-  hintTextContainerStyle: StyleProp<ViewStyle>,
-  onPatternMatch: () => void,
-  onWrongPattern: () => void,
-  onPatternMatchAfterDelay: () => void,
-  onWrongPatternAfterDelay: () => void,
-};
+interface Props {
+  containerDimension: number;
+  containerWidth: number;
+  containerHeight: number;
+  correctPattern: string;
+  processName: PatternProcess;
+  isChangePattern: boolean;
+  showHintMessage: boolean;
+  dotRadius: number;
+  dotsColor: ColorValue;
+  movingLineColor: ColorValue;
+  snapDotRadius: number;
+  lineStrokeWidth: number;
+  activeLineColor: ColorValue;
+  wrongPatternColor: ColorValue;
+  snapDuration: number;
+  connectedDotsColor: ColorValue;
+  correctPatternColor: ColorValue;
+  minPatternLength: number;
+  newPatternConfirmationMessage: string;
+  wrongPatternDelayTime: number;
+  correctPatternMessage: string;
+  correctPatternDelayTime: number;
+  correctPatternDelayDurationMessage: string;
+  iswrongPatternCountLimited: boolean;
+  totalWrongPatternCount: number;
+  wrongPatternDelayDurationMessage: string;
+  minPatternLengthErrorMessage: string;
+  wrongPatternMessage: string;
+  changePatternFirstMessage: string;
+  changePatternDelayTime: number;
+  changePatternSecondMessage: string;
+  isEnableHeadingText: boolean;
+  enableDotsJoinViration: boolean;
+  vibrationPattern: number[];
+  headingText: string;
+  enablePatternNotSameCondition: boolean;
+  patternTotalCountReachedErrorMessage: string;
+  newPatternDelayDurationMessage: string;
+  newPatternMatchedMessage: string;
+  newPatternDelayTime: number;
+  patternCountLimitedErrorMessage: string;
+  samePatternMatchedMessage: string;
+  hintTextStyle?: StyleProp<TextStyle>;
+  headingTextStyle?: StyleProp<TextStyle>;
+  hintTextContainerStyle?: StyleProp<ViewStyle>;
+  onPatternMatch?: (pattern: Coordinate[]) => void;
+  onWrongPattern?: (pattern: Coordinate[], remainingCount: number) => void;
+  onPatternMatchAfterDelay?: (pattern: Coordinate[]) => void;
+  onWrongPatternAfterDelay?: (
+    pattern: Coordinate[],
+    remainingCount: number
+  ) => void;
+}
 
-type State = {
-  activeDotCoordinate: ?Coordinate,
-  initialGestureCoordinate: ?Coordinate,
-  pattern: Array<Coordinate>,
-  correctPattern: Array<Coordinate>,
-  showError: boolean,
-  showHint: boolean,
-  hintText: String,
-  matched: boolean,
-  changePatternConfirm: boolean,
-  processName: String,
-};
+interface State {
+  activeDotCoordinate: Coordinate | null | undefined;
+  initialGestureCoordinate: Coordinate | null | undefined;
+  pattern: Array<Coordinate>;
+  correctPattern: Array<Coordinate> | null;
+  showError: boolean;
+  showHint: boolean;
+  hintText: String;
+  matched: boolean;
+  changePatternConfirm: boolean;
+  processName: PatternProcess;
+}
 
 export default class FeaturedPatternLock extends React.Component<Props, State> {
-  _panResponder: { panHandlers: Object };
-  _activeLine: ?Object;
-  _dots: Array<Coordinate>;
-  _dotNodes: Array<?Object>;
-  _mappedDotsIndex: Array<Coordinate>;
+  private _panResponder: any;
+  private _activeLine: Line | null = null;
+  private _dots: Coordinate[] = [];
+  private _dotNodes: Array<Circle | null> = [];
+  private _mappedDotsIndex: Coordinate[] = [];
+  private _snapAnimatedValues: Animated.Value[] = [];
+  private _resetTimeout?: NodeJS.Timeout;
+  private _patternMatchedTimeout?: NodeJS.Timeout;
 
-  _snapAnimatedValues: Array<Animated.Value>;
-
-  _resetTimeout: number;
-
-  _patternMatchedTimeout: number;
-
-  _isSamePattern: boolean;
-
-  static defaultProps = {
+  static defaultProps: Partial<Props> = {
     containerDimension: 3,
     containerWidth: width,
     containerHeight: height / 2,
@@ -120,7 +122,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     dotsColor: 'red',
     movingLineColor: 'blue',
     snapDotRadius: 15,
-    lineStrokeWidth: '6',
+    lineStrokeWidth: 6,
     activeLineColor: 'blue',
     wrongPatternColor: 'red',
     snapDuration: 100,
@@ -156,8 +158,9 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     },
   };
 
-  constructor() {
-    super(...arguments);
+  constructor(props: Props) {
+    super(props);
+
     this.state = {
       initialGestureCoordinate: null,
       activeDotCoordinate: null,
@@ -196,7 +199,6 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     });
 
     this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => !this.state.showError,
       onMoveShouldSetPanResponderCapture: () => !this.state.showError,
 
       onPanResponderGrant: (e) => {
@@ -261,7 +263,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             y: matchedDot.y,
           };
 
-          let intermediateDotIndexes = [];
+          let intermediateDotIndexes: number[] = [];
           if (this.props.enableDotsJoinViration) {
             Vibration.vibrate(this.props.vibrationPattern);
           }
@@ -327,7 +329,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                     hintText: this.props.correctPatternDelayDurationMessage,
                   },
                   () => {
-                    this.props.onPatternMatch(pattern);
+                    this.props.onPatternMatch?.(pattern);
                     this._patternMatchedTimeout = setTimeout(() => {
                       this.setState({
                         showHint: true,
@@ -355,7 +357,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                   },
                   () => {
                     if (this.state.changePatternConfirm) {
-                      this.props.onPatternMatch(pattern);
+                      this.props.onPatternMatch?.(pattern);
                     }
 
                     this.setState({
@@ -584,7 +586,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                       this.setState({
                         correctPattern: pattern,
                         showHint: true,
-                        processName: 'confirm_pattern',
+                        processName: PatternProcess.CONFIRM_PATTERN,
                         hintText: this.props.newPatternMatchedMessage,
                         showError: false,
                         changePatternConfirm: true,
@@ -626,11 +628,11 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
       message = '';
     }
 
-    if (processName === 'confirm_pattern') {
+    if (processName === PatternProcess.CONFIRM_PATTERN) {
       headingText = this.props.headingText
         ? this.props.headingText
         : 'Confirm Pattern';
-    } else if (processName === 'set_pattern') {
+    } else if (processName === PatternProcess.NEW_PATTERN) {
       headingText = this.props.headingText
         ? this.props.headingText
         : 'Set New Pattern';
@@ -656,6 +658,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                 );
                 return (
                   <Circle
+                    // @ts-ignore
                     ref={(circle) => (this._dotNodes[i] = circle)}
                     key={i}
                     cx={dot.x}
@@ -706,8 +709,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
                       matched
                         ? this.props.correctPatternColor
                         : showError
-                        ? this.props.wrongPatternColor
-                        : this.props.activeLineColor
+                          ? this.props.wrongPatternColor
+                          : this.props.activeLineColor
                     }
                     strokeWidth={this.props.lineStrokeWidth.toString()}
                   />
@@ -715,6 +718,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
               })}
               {activeDotCoordinate ? (
                 <Line
+                  // @ts-ignore
                   ref={(component) => (this._activeLine = component)}
                   x1={activeDotCoordinate.x}
                   y1={activeDotCoordinate.y}
@@ -742,7 +746,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
 
   _isPatternMatched(currentPattern: Array<Coordinate>) {
     let { correctPattern } = this.state;
-    if (currentPattern.length !== correctPattern.length) {
+    if (currentPattern.length !== correctPattern?.length) {
       return false;
     }
     let matched = true;
@@ -756,13 +760,6 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     }
     return matched;
   }
-
-  _isSamePattern = (pattern: Coordinate) => {
-    if (getCorrectPatterninString(pattern) === this.props.correctPattern) {
-      return true;
-    }
-    return false;
-  };
 
   _snapDot(animatedValue: Animated.Value) {
     Animated.sequence([
