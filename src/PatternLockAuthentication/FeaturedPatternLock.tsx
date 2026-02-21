@@ -784,12 +784,12 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
       Animated.timing(animatedValue, {
         toValue: this.props.snapDotRadius,
         duration: this.props.snapDuration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(animatedValue, {
         toValue: this.props.dotRadius,
         duration: this.props.snapDuration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start();
   }
