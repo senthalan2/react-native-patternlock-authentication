@@ -1,36 +1,78 @@
-# react-native-patternlock-authentication
+# 🔐 react-native-patternlock-authentication
 
-Pattern Lock Security for both Android and IOS using react native svg.
+> A customizable Pattern Lock Security component for **Android** and **iOS** built with React Native and SVG.
 
-### Featured Pattern Working Gif
+Create secure pattern authentication flows like:
+
+- ✅ Set New Pattern
+- 🔁 Change Pattern
+- 🔒 Confirm Pattern
+- 🎯 General Pattern Validation
+
+---
+
+## ✨ Features
+
+- Fully customizable UI
+- Smooth dot snapping animation
+- Wrong pattern delay handling
+- Pattern length validation
+- Wrong attempt limit support
+- Built-in Change Pattern flow
+- Optional vibration feedback
+- Works on both Android & iOS
+- Built using `react-native-svg`
+
+---
+
+## 🎥 Demo
+
+### 🔹 Set New Pattern
 
 ![Set New Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/SetNewPattern.gif)
+
+### 🔹 Change Pattern
+
 ![Change Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/ChangePattern.gif)
+
+### 🔹 Confirm Pattern
+
 ![Confirm Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/FeaturedPatternLock%20Gifs/ConfirmPattern.gif)
 
-### General Pattern Working Gif
+### 🔹 General Pattern
 
 ![General Pattern](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/Assets/GeneralPatternLockGifs/GeneralPattern.gif)
 
-## Installation
+---
 
-`Note:` To use this Authentication, ensure that you have `react-native-svg` and its dependencies ([follow this guide](https://www.npmjs.com/package/react-native-svg)).
+# 📦 Installation
 
-```sh
+> ⚠️ This package requires `react-native-svg`.
+
+Follow the official installation guide: [react-native-svg ](https://www.npmjs.com/package/react-native-svg)
+
+Then install:
+
+```bash
 npm install react-native-patternlock-authentication
 ```
 
-## Usage
+---
 
-There are two types of PatternLock Available in this Package.
+# 🚀 Usage
 
-1. GeneralPatternLock
-2. FeaturedPatternLock
+This package provides two pattern lock components:
 
-<!-- [FeaturedPatternLock](https://github.com/senthalan2/react-native-patternlock-authentication/blob/main/README.md#L150-L297) -->
-<!-- FeaturedPatternLock -->
+1. **GeneralPatternLock** – Simple pattern validation
+2. **FeaturedPatternLock** – Complete authentication flow (Set / Confirm / Change)
 
-## GeneralPatternLock
+---
+
+## 🧩 1. GeneralPatternLock
+
+Best for simple unlock validation screens.
+
+### Example
 
 ```js
 import { Dimensions } from 'react-native';
@@ -84,7 +126,7 @@ export const App = () => {
       onPatternMatchAfterDelay={onPatternMatchAfterDelay}
       onWrongPattern={onWrongPattern}
 
-      // ...Use Remaining Props as per your convenience
+      // ...Use remaining props as per your convenience
     />
 
     //...
@@ -92,69 +134,56 @@ export const App = () => {
 };
 ```
 
-### Props
+---
 
-| Props                   | Type                  | Required | Default                             | Description                                                                            |
-| ----------------------- | --------------------- | -------- | ----------------------------------- | -------------------------------------------------------------------------------------- |
-| containerDimension      | Number                | No       | 3                                   | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4. |
-| containerWidth          | Number                | No       | Dimensions.get('window').width      |
-| containerHeight         | Number                | No       | (Dimensions.get('window').height)/2 |
-| correctPattern          | String                | Yes      |
-| wrongPatternDelayTime   | Number (MilliSeconds) | No       | 1000                                | Pattern draw event disable duration after the Wrong Pattern.                           |
-| correctPatternDelayTime | Number                | No       | 0                                   | Pattern draw event disable duration after the Correct Pattern.                         |
-| dotsAndLineColor        | String                | No       | blue                                |
-| wrongPatternColor       | String                | No       | red                                 |
-| lineStrokeWidth         | Number                | No       | 5                                   | Thickness of Line                                                                      |
-| defaultDotRadius        | Number                | No       | 6                                   |
-| snapDotRadius           | Number                | No       | 10                                  | Snaping radius of Dots When Connecting the Dots.                                       |
-| snapDuration            | Number                | No       | 100                                 | Snaping duration of Dots When Connecting the Dots.                                     |
-| enableHint              | Boolean               | No       | false                               |
-| hint                    | String                | No       |
-| hintContainerStyle      | ViewStyle             | No       |
-| hintTextStyle           | TextStyle             | No       | { color: '#000000' }                |
-| matchedPatternColor     | String                | No       | green                               |
+### 🛠 GeneralPatternLock Props
 
-### Methods
+| Props                   | Type        | Required | Default                             | Description                                                                                 |
+| ----------------------- | ----------- | -------- | ----------------------------------- | ------------------------------------------------------------------------------------------- |
+| containerDimension      | number      | No       | 3                                   | It refers to the dimensions of the pattern dots array (e.g., 3 means 3 × 3, 4 means 4 × 4). |
+| containerWidth          | number      | No       | Dimensions.get('window').width      |
+| containerHeight         | number      | No       | (Dimensions.get('window').height)/2 |
+| correctPattern          | string      | No       |
+| wrongPatternDelayTime   | number (ms) | No       | 1000                                | Pattern draw event disable duration after the Wrong Pattern.                                |
+| correctPatternDelayTime | number      | No       | 0                                   | Pattern draw event disable duration after the Correct Pattern.                              |
+| dotsAndLineColor        | ColorValue  | No       | blue                                |
+| wrongPatternColor       | ColorValue  | No       | red                                 |
+| lineStrokeWidth         | number      | No       | 5                                   | Thickness of Line                                                                           |
+| defaultDotRadius        | number      | No       | 6                                   |
+| snapDotRadius           | number      | No       | 10                                  | Snaping radius of Dots When Connecting the Dots.                                            |
+| snapDuration            | number      | No       | 100                                 | Snaping duration of Dots When Connecting the Dots.                                          |
+| enableHint              | boolean     | No       | false                               |
+| hint                    | string      | No       |
+| hintContainerStyle      | ViewStyle   | No       |
+| hintTextStyle           | TextStyle   | No       | { color: '#000000' }                |
+| matchedPatternColor     | ColorValue  | No       | green                               |
 
-`onPatternMatch`
+---
 
-It will call, when the Pattern is Matched with Correct Pattern.
+### 🎯 GeneralPatternLock Callbacks
 
-| Type     | Required |
-| -------- | -------- |
-| function | Yes      |
+| Callback                 | Returns     | Description                            |
+| ------------------------ | ----------- | -------------------------------------- |
+| onPatternMatch           | `(pattern)` | Called when pattern matches            |
+| onWrongPattern           | `(pattern)` | Called when pattern is wrong           |
+| onPatternMatchAfterDelay | `(pattern)` | Called after `correctPatternDelayTime` |
+| onWrongPatternAfterDelay | `(pattern)` | Called after `wrongPatternDelayTime`   |
 
-`onWrongPattern`
+---
 
-It will call, when the Pattern is Matched with Wrong Pattern.
+## 🌟 2. FeaturedPatternLock
 
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
+Complete pattern authentication workflow including:
 
-`onPatternMatchAfterDelay`
+- 🔐 Set New Pattern
+- ✅ Confirm Pattern
+- 🔁 Change Pattern
+- 🚫 Wrong Attempt Limiting
+- 📳 Optional Vibration Feedback
 
-It will call, when the Pattern is Matched with Correct Pattern after the `correctPatternDelayTime` which is passed as prop by you.
+---
 
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
-
-`onWrongPatternAfterDelay`
-
-It will call, when the Pattern is Matched with Wrong Pattern after the `wrongPatternDelayTime` which is passed as prop by you.
-
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
-
-## FeaturedPatternLock
-
-It includes all Pattern Authentication Process like,
-
-1. Confirm Your Pattern,
-2. Change Pattern
-3. Set New Pattern
+### Example
 
 ```js
 import { Dimensions } from 'react-native';
@@ -199,7 +228,7 @@ export const App = () => {
       isChangePattern={false}
       processName={PatternProcess.NEW_PATTERN}
 
-      // ...Use Remaining Props as per your convenience
+      // ...Use remaining props as per your convenience
     />
 
     //...
@@ -207,100 +236,102 @@ export const App = () => {
 };
 ```
 
-### Props
+---
 
-| Props                                | Type      | Required                                                                                                               | Default                             | Description                                                                                                                                                                                              |
-| ------------------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| containerDimension                   | Number    | No                                                                                                                     | 3                                   | It Refers the Dimension of the Pattern Dots Array (eg.). 3 means 3 x 3, 4 means 4 x 4.                                                                                                                   |
-| containerWidth                       | Number    | No                                                                                                                     | Dimensions.get('window').width      |
-| containerHeight                      | Number    | No                                                                                                                     | (Dimensions.get('window').height)/2 |
-| correctPattern                       | String    | Yes - when `processName` is `PatternProcess.CONFIRM_PATTERN`. No - when `processName` is `PatternProcess.NEW_PATTERN`. |
-| processName                          | String    | No                                                                                                                     | PatternProcess.NEW_PATTERN          | `PatternProcess` Contains two processes. `NEW_PATTERN` and `CONFIRM_PATTERN`. `processName` must be `CONFIRM_PATTERN` for Change Pattern Process                                                         |
-| isChangePattern                      | boolean   | No                                                                                                                     | false                               | If the Pattern is working as Change Pattern then change it to `true`                                                                                                                                     |
-| showHintMessage                      | Boolean   | No                                                                                                                     | false                               |
-| dotRadius                            | Number    | No                                                                                                                     | 10                                  |
-| dotsColor                            | String    | No                                                                                                                     | red                                 |
-| movingLineColor                      | String    | No                                                                                                                     | blue                                |
-| snapDotRadius                        | Number    | No                                                                                                                     | 15                                  | Snaping radius of Dots When Connecting the Dots.                                                                                                                                                         |
-| lineStrokeWidth                      | String    | No                                                                                                                     | 6                                   |
-| activeLineColor                      | String    | No                                                                                                                     | blue                                |
-| wrongPatternColor                    | String    | No                                                                                                                     | red                                 |
-| snapDuration                         | Number    | No                                                                                                                     | 100 (milli seconds)                 | Snaping duration of Dots When Connecting the Dots.                                                                                                                                                       |
-| connectedDotsColor                   | String    | No                                                                                                                     | blue                                |
-| correctPatternColor                  | Number    | No                                                                                                                     | green                               |
-| minPatternLength                     | Number    | No                                                                                                                     | 3                                   |
-| newPatternConfirmationMessage        | String    | No                                                                                                                     | Empty String                        |
-| wrongPatternDelayTime                | Number    | No                                                                                                                     | 1000 (milli seconds)                |
-| correctPatternMessage                | String    | No                                                                                                                     | Empty String                        |
-| correctPatternDelayTime              | Number    | No                                                                                                                     | 1000 (milli seconds)                |
-| correctPatternDelayDurationMessage   | String    | No                                                                                                                     | Empty String                        |
-| iswrongPatternCountLimited           | Boolean   | No                                                                                                                     | false                               | If there is maximum limit of Wrong Pattern then change it to true                                                                                                                                        |
-| totalWrongPatternCount               | Number    | No                                                                                                                     | 0                                   | If `iswrongPatternCountLimited` is true then give maximum limit of Wrong Pattern                                                                                                                         |
-| wrongPatternDelayDurationMessage     | String    | No                                                                                                                     | Empty String                        |
-| minPatternLengthErrorMessage         | String    | No                                                                                                                     | Empty String                        |
-| wrongPatternMessage                  | String    | No                                                                                                                     | Empty String                        |
-| changePatternFirstMessage            | String    | No                                                                                                                     | Empty String                        |
-| changePatternDelayTime               | Number    | No                                                                                                                     | 1000 (milli seconds)                |
-| changePatternSecondMessage           | String    | No                                                                                                                     | Empty String                        |
-| isEnableHeadingText                  | Boolean   | No                                                                                                                     | false                               |
-| enableDotsJoinViration               | Boolean   | No                                                                                                                     | false                               | If it is `true`, then the mobile will be vibrate whenever the Pattern Dots Connects (Add Vibration Permissions). [Refer React Native Vibration](https://reactnative.dev/docs/vibration) for Permissions. |
-| vibrationPattern                     | Array     | No                                                                                                                     | [0, 200]                            | Pattern of Vibration for connecting Dots. If `enableDotsJoinViration` is `true` then the Mobile Vibrates in this Pattern [Refer React Native Vibration](https://reactnative.dev/docs/vibration)          |
-| headingText                          | String    | No                                                                                                                     | Empty String                        |
-| enablePatternNotSameCondition        | Boolean   | No                                                                                                                     | true                                | If It is `true`, then the previous Pattern is not allowed for new Pattern when the time of Change Pattern Process. Change it to `false`, if the Previous Pattern is also allowed for New Pattern         |
-| patternTotalCountReachedErrorMessage | String    | No                                                                                                                     | Empty String                        |
-| newPatternDelayDurationMessage       | String    | No                                                                                                                     | Empty String                        |
-| newPatternMatchedMessage             | String    | No                                                                                                                     | Empty String                        |
-| newPatternDelayTime                  | Number    | No                                                                                                                     | 1000 (milli seconds)                |
-| patternCountLimitedErrorMessage      | String    | No                                                                                                                     | Empty String                        |
-| samePatternMatchedMessage            | String    | No                                                                                                                     | Empty String                        |
-| hintTextStyle                        | TextStyle | No                                                                                                                     | { color: 'blue' }                   |
-| headingTextStyle                     | TextStyle | No                                                                                                                     | { color: 'blue' }                   |
-| hintTextContainerStyle               | ViewStyle | No                                                                                                                     | { alignItems: 'center' }            |
+### 🔄 PatternProcess Options
 
-### Methods
+```js
+PatternProcess.NEW_PATTERN;
+PatternProcess.CONFIRM_PATTERN;
+```
 
-`onPatternMatch`
+For Change Pattern:
 
-It will call, when the Pattern is Matched with Correct Pattern.
-It will also called after the Confirm Pattern of Set Pattern Process.
-It returns `pattern` as callback Parameters.
+- Set `processName={PatternProcess.CONFIRM_PATTERN}`
+- Set `isChangePattern={true}`
 
-| Type     | Required |
-| -------- | -------- |
-| function | Yes      |
+---
 
-`onWrongPattern`
+### 🛠 FeaturedPatternLock Props
 
-It will call, whenever the Pattern is Matched with Wrong Pattern.
-It returns `pattern` and `wrongPatternRemainingCount` ( if enable `iswrongPatternCountLimited` ) as callback Parameters.
+| Props                                | Type           | Required | Default                             | Description                                                                                                                                                                                                            |
+| ------------------------------------ | -------------- | -------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| containerDimension                   | number         | No       | 3                                   | It refers to the dimensions of the pattern dots array (e.g., 3 means 3 × 3, 4 means 4 × 4).                                                                                                                            |
+| containerWidth                       | number         | No       | Dimensions.get('window').width      |
+| containerHeight                      | number         | No       | (Dimensions.get('window').height)/2 |
+| correctPattern                       | string         | No       |
+| processName                          | PatternProcess | No       | PatternProcess.NEW_PATTERN          | `PatternProcess` contains two processes: `NEW_PATTERN` and `CONFIRM_PATTERN`. For the Change Pattern process, `processName` must be set to `CONFIRM_PATTERN`.                                                          |
+| isChangePattern                      | boolean        | No       | false                               | If the pattern is being used as a Change Pattern, set this to `true`.                                                                                                                                                  |
+| showHintMessage                      | boolean        | No       | false                               |
+| dotRadius                            | number         | No       | 10                                  |
+| dotsColor                            | ColorValue     | No       | red                                 |
+| movingLineColor                      | ColorValue     | No       | blue                                |
+| snapDotRadius                        | number         | No       | 15                                  | The snapping radius of dots while connecting them.                                                                                                                                                                     |
+| lineStrokeWidth                      | string         | No       | 6                                   |
+| activeLineColor                      | ColorValue     | No       | blue                                |
+| wrongPatternColor                    | ColorValue     | No       | red                                 |
+| snapDuration                         | number         | No       | 100 (ms)                            | The snapping duration of dots while connecting them.                                                                                                                                                                   |
+| connectedDotsColor                   | ColorValue     | No       | blue                                |
+| correctPatternColor                  | ColorValue     | No       | green                               |
+| minPatternLength                     | number         | No       | 3                                   |
+| newPatternConfirmationMessage        | string         | No       | Empty String                        |
+| wrongPatternDelayTime                | number         | No       | 1000 (milli seconds)                |
+| correctPatternMessage                | string         | No       | Empty String                        |
+| correctPatternDelayTime              | number         | No       | 1000 (milli seconds)                |
+| correctPatternDelayDurationMessage   | string         | No       | Empty String                        |
+| iswrongPatternCountLimited           | boolean        | No       | false                               | Set this to `true` if there is a maximum limit for wrong patterns.                                                                                                                                                     |
+| totalWrongPatternCount               | number         | No       | 0                                   | If `isWrongPatternCountLimited` is true, specify the maximum limit for wrong patterns.                                                                                                                                 |
+| wrongPatternDelayDurationMessage     | string         | No       | Empty String                        |
+| minPatternLengthErrorMessage         | string         | No       | Empty String                        |
+| wrongPatternMessage                  | string         | No       | Empty String                        |
+| changePatternFirstMessage            | string         | No       | Empty String                        |
+| changePatternDelayTime               | number         | No       | 1000 (milli seconds)                |
+| changePatternSecondMessage           | string         | No       | Empty String                        |
+| isEnableHeadingText                  | boolean        | No       | false                               |
+| enableDotsJoinViration               | boolean        | No       | false                               | If set to `true`, the mobile will vibrate whenever the pattern dots are connected (ensure vibration permissions are granted).. [Refer React Native Vibration](https://reactnative.dev/docs/vibration) for Permissions. |
+| vibrationPattern                     | number[]       | No       | [0, 200]                            | Pattern of vibration when connecting dots. If `enableDotsJoinVibration` is `true`, the mobile device will vibrate according to this pattern. [Refer React Native Vibration](https://reactnative.dev/docs/vibration)    |
+| headingText                          | string         | No       | Empty String                        |
+| enablePatternNotSameCondition        | boolean        | No       | true                                | If set to `true`, the previous pattern is not allowed as the new pattern during the Change Pattern process. Set it to `false` if the previous pattern can be used as the new pattern.                                  |
+| patternTotalCountReachedErrorMessage | string         | No       | Empty String                        |
+| newPatternDelayDurationMessage       | string         | No       | Empty String                        |
+| newPatternMatchedMessage             | string         | No       | Empty String                        |
+| newPatternDelayTime                  | number         | No       | 1000 (milli seconds)                |
+| patternCountLimitedErrorMessage      | string         | No       | Empty String                        |
+| samePatternMatchedMessage            | string         | No       | Empty String                        |
+| hintTextStyle                        | TextStyle      | No       | { color: 'blue' }                   |
+| headingTextStyle                     | TextStyle      | No       | { color: 'blue' }                   |
+| hintTextContainerStyle               | ViewStyle      | No       | { alignItems: 'center' }            |
 
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
+---
 
-`onPatternMatchAfterDelay`
+### 🎯 FeaturedPatternLock Callbacks
 
-It will call, when the Pattern is Matched with Correct Pattern after the `correctPatternDelayTime` which is passed as prop by you.
-It will also called after the Confirm Pattern of Set Pattern Process.
-It returns `pattern` as callback Parameters.
+| Callback                 | Returns                      | Description                            |
+| ------------------------ | ---------------------------- | -------------------------------------- |
+| onPatternMatch           | `(pattern)`                  | Called when pattern matches            |
+| onWrongPattern           | `(pattern, remainingCount?)` | Called when pattern is wrong           |
+| onPatternMatchAfterDelay | `(pattern)`                  | Called after `correctPatternDelayTime` |
+| onWrongPatternAfterDelay | `(pattern, remainingCount?)` | Called after `wrongPatternDelayTime`   |
 
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
+---
 
-`onWrongPatternAfterDelay`
+## 💡 Best Practices
 
-It will call, when the Pattern is Matched with Wrong Pattern after the `wrongPatternDelayTime` which is passed as prop by you.
-It returns `pattern` and `wrongPatternRemainingCount` ( if enable `iswrongPatternCountLimited` ) as callback Parameters.
+- Store patterns securely (e.g., encrypted storage)
+- Combine with biometric authentication for better UX
+- Use wrong attempt limits to prevent brute-force attacks
+- Adjust snap radius for better touch experience on tablets
 
-| Type     | Required |
-| -------- | -------- |
-| function | No       |
+---
 
-## License
+# 📄 License
 
-MIT
+MIT License
 
-## Would you like to support me?
+---
+
+# ☕ Support the Project
+
+If this package helps you, consider supporting ❤️
 
 <a href="https://www.buymeacoffee.com/senthalan2" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>

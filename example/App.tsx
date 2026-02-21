@@ -4,8 +4,11 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import {
   FeaturedPatternLock,
   GeneralPatternLock,
+  PatternCoordinate,
+  PatternHelpers,
   PatternProcess,
 } from 'react-native-patternlock-authentication';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 const PATTERN_CONTAINER_HEIGHT = height / 2;
@@ -16,7 +19,11 @@ const CORRECT_UNLOCK_PATTERN = '0123';
 export default function App() {
   const [hint, sethint] = React.useState('Current Pattern is "0123"');
 
-  const onPatternMatch = () => {
+  const onPatternMatch = (pattern: PatternCoordinate[]) => {
+    console.log(
+      'Pattern Matched',
+      PatternHelpers.getCorrectPatterninString(pattern),
+    );
     sethint('Pattern Matched');
   };
 
@@ -29,11 +36,11 @@ export default function App() {
   };
 
   const onWrongPatternAfterDelay = () => {
-    sethint('Current Pattern is "0123"');
+    sethint(`Current Pattern is "${CORRECT_UNLOCK_PATTERN}"`);
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <FeaturedPatternLock
         containerDimension={PATTERN_DIMENSION}
         containerWidth={PATTERN_CONTAINER_WIDTH}
@@ -140,7 +147,7 @@ export default function App() {
         }}
         hintTextStyle={{ textAlign: 'center', color: 'red', fontSize: 14 }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

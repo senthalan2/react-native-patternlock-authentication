@@ -19,7 +19,7 @@ const getSinglePatternObjectValue = (value: number) => {
     case 8:
       return { x: 2, y: 2 };
     default:
-      return null;
+      return { x: 0, y: 0 };
   }
 };
 
