@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,18 +11,19 @@ import {
   type TextStyle,
   type GestureResponderEvent,
   type PanResponderGestureState,
-} from "react-native";
+  type ColorValue,
+} from 'react-native';
 
-import Svg, { Line, Circle } from "react-native-svg";
+import Svg, { Line, Circle } from 'react-native-svg';
 
 import {
   populateDotsCoordinate,
   getDotIndex,
   getIntermediateDotIndexes,
   getCorrectPatterninArray,
-} from "./Helpers";
+} from './Helpers';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 type Coordinate = {
   x: number;
@@ -36,8 +37,8 @@ interface Props {
   correctPattern: string;
   wrongPatternDelayTime: number;
   correctPatternDelayTime: number;
-  dotsAndLineColor: string;
-  wrongPatternColor: string;
+  dotsAndLineColor: ColorValue;
+  wrongPatternColor: ColorValue;
   lineStrokeWidth: number;
   defaultDotRadius: number;
   snapDotRadius: number;
@@ -46,7 +47,7 @@ interface Props {
   hint: string;
   hintContainerStyle?: StyleProp<ViewStyle>;
   hintTextStyle?: StyleProp<TextStyle>;
-  matchedPatternColor: string;
+  matchedPatternColor: ColorValue;
   onPatternMatch?: (pattern: Coordinate[]) => void;
   onWrongPattern?: (pattern: Coordinate[]) => void;
   onPatternMatchAfterDelay?: (pattern: Coordinate[]) => void;
@@ -76,17 +77,17 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
     containerWidth: width,
     containerHeight: height / 2,
     enableHint: false,
-    hint: "",
+    hint: '',
     wrongPatternDelayTime: 1000,
     correctPatternDelayTime: 0,
-    dotsAndLineColor: "blue",
-    wrongPatternColor: "red",
+    dotsAndLineColor: 'blue',
+    wrongPatternColor: 'red',
     lineStrokeWidth: 5,
     defaultDotRadius: 6,
     snapDotRadius: 10,
     snapDuration: 100,
-    matchedPatternColor: "green",
-    hintTextStyle: { color: "#000000" },
+    matchedPatternColor: 'green',
+    hintTextStyle: { color: '#000000' },
   };
 
   constructor(props: Props) {
@@ -106,7 +107,7 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
     const { screenCoordinates, mappedIndex } = populateDotsCoordinate(
       containerDimension,
       containerWidth,
-      containerHeight,
+      containerHeight
     );
 
     this._dots = screenCoordinates;
@@ -131,7 +132,7 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 
         const activeDotIndex = getDotIndex(
           { x: locationX, y: locationY },
-          this._dots,
+          this._dots
         );
 
         if (activeDotIndex != null) {
@@ -147,14 +148,14 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
             },
             () => {
               this._snapDot(dotWillSnap);
-            },
+            }
           );
         }
       },
 
       onPanResponderMove: (
         _e: GestureResponderEvent,
-        gestureState: PanResponderGestureState,
+        gestureState: PanResponderGestureState
       ) => {
         const { dx, dy } = gestureState;
         const { initialGestureCoordinate, activeDotCoordinate, pattern } =
@@ -169,7 +170,7 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 
         const matchedDotIndex = getDotIndex(
           { x: endGestureX, y: endGestureY },
-          this._dots,
+          this._dots
         );
 
         const matchedDot =
@@ -191,12 +192,12 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
             intermediateDotIndexes = getIntermediateDotIndexes(
               pattern[pattern.length - 1],
               newPattern,
-              this.props.containerDimension,
+              this.props.containerDimension
             );
           }
 
           const filteredIntermediateDotIndexes = intermediateDotIndexes.filter(
-            (index) => !this._isAlreadyInPattern(this._mappedDotsIndex[index]),
+            (index) => !this._isAlreadyInPattern(this._mappedDotsIndex[index])
           );
 
           filteredIntermediateDotIndexes.forEach((index) => {
@@ -224,7 +225,7 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
                   this._snapDot(this._snapAnimatedValues[index]);
                 });
               }
-            },
+            }
           );
         } else {
           this._activeLine?.setNativeProps({
@@ -263,13 +264,13 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
                   () => {
                     if (this.props.onPatternMatchAfterDelay) {
                       this.props.onPatternMatchAfterDelay(
-                        pattern as Coordinate[],
+                        pattern as Coordinate[]
                       );
                     }
-                  },
+                  }
                 );
               }, this.props.correctPatternDelayTime);
-            },
+            }
           );
         } else {
           this.setState(
@@ -294,13 +295,13 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
                   () => {
                     if (this.props.onWrongPatternAfterDelay) {
                       this.props.onWrongPatternAfterDelay(
-                        pattern as Coordinate[],
+                        pattern as Coordinate[]
                       );
                     }
-                  },
+                  }
                 );
               }, this.props.wrongPatternDelayTime);
-            },
+            }
           );
         }
       },
@@ -316,14 +317,14 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
   private _isAlreadyInPattern(coordinate: Coordinate | undefined) {
     return (
       this.state.pattern.find(
-        (dot) => dot?.x === coordinate?.x && dot?.y === coordinate?.y,
+        (dot) => dot?.x === coordinate?.x && dot?.y === coordinate?.y
       ) != null
     );
   }
 
   private _isPatternMatched(currentPattern: (Coordinate | undefined)[]) {
     const correctPatternArray = getCorrectPatterninArray(
-      this.props.correctPattern,
+      this.props.correctPattern
     );
 
     if (currentPattern.length !== correctPatternArray.length) {
@@ -377,7 +378,7 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
             {this._dots.map((dot, i) => {
               const mappedDot = this._mappedDotsIndex[i];
               const isIncludedInPattern = pattern.find(
-                (d) => d?.x === mappedDot?.x && d?.y === mappedDot?.y,
+                (d) => d?.x === mappedDot?.x && d?.y === mappedDot?.y
               );
 
               return (
@@ -404,14 +405,14 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 
               const startIndex = this._mappedDotsIndex.findIndex(
                 (dot) =>
-                  dot.x === startCoordinate?.x && dot.y === startCoordinate?.y,
+                  dot.x === startCoordinate?.x && dot.y === startCoordinate?.y
               );
 
               const endCoordinate = pattern[index + 1];
 
               const endIndex = this._mappedDotsIndex.findIndex(
                 (dot) =>
-                  dot.x === endCoordinate?.x && dot.y === endCoordinate?.y,
+                  dot.x === endCoordinate?.x && dot.y === endCoordinate?.y
               );
 
               if (startIndex < 0 || endIndex < 0) return null;
@@ -460,6 +461,6 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
 });
