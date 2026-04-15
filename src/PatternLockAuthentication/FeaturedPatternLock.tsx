@@ -38,18 +38,43 @@ export type Coordinate = {
 };
 
 /**
- * Hint messages for different pattern flow steps
+ * Hint messages for different pattern flow steps and events
+ * Provides separate, meaningful messages for each specific scenario
  */
 interface HintMessages {
-  confirmPattern?: string;
-  newPattern?: string;
-  confirmNewPattern?: string;
-  wrongPattern?: string;
-  minPatternLengthError?: string;
-  patternMismatch?: string;
-  wrongPatternDelay?: string;
-  correctPatternDelay?: string;
-  newPatternDelay?: string;
+  // Confirm Pattern Flow - Simple
+  confirmPatternMismatchImmediate?: string;
+  confirmPatternMismatchAfterDelay?: string;
+  confirmPatternMatchedImmediate?: string;
+  confirmPatternMatchedAfterDelay?: string;
+  confirmPatternTooShortError?: string;
+
+  // Confirm Pattern Flow - Error with attempts limit
+  confirmPatternAttemptsExhausted?: string;
+  confirmPatternLimitedWarning?: string;
+
+  // New Pattern Flow - Set
+  setPatternTooShortError?: string;
+  setPatternTooShortAfterDelay?: string;
+  setPatternSuccessImmediate?: string;
+
+  // New Pattern Flow - Confirm
+  confirmNewPatternInstruction?: string;
+
+  // Change Pattern Flow - Confirm Current
+  changeConfirmCurrentMismatchImmediate?: string;
+  changeConfirmCurrentMismatchAfterDelay?: string;
+  changeConfirmCurrentMatchedImmediate?: string;
+  changeConfirmCurrentTooShortError?: string;
+
+  // Change Pattern Flow - Set New
+  changeSetNewPatternInstruction?: string;
+  changeSetNewPatternSameAsOldError?: string;
+  changeSetNewPatternSameAsOldAfterDelay?: string;
+  changeSetNewPatternSuccessImmediate?: string;
+
+  // Change Pattern Flow - Confirm New
+  changeConfirmNewPatternInstruction?: string;
 }
 
 /**
@@ -91,21 +116,6 @@ interface Props {
   // Hint and message configuration
   showHintMessage: boolean;
   hintMessages?: HintMessages;
-
-  // Deprecated message props (for backward compatibility - prefer hintMessages)
-  newPatternConfirmationMessage: string;
-  correctPatternMessage: string;
-  correctPatternDelayDurationMessage: string;
-  wrongPatternDelayDurationMessage: string;
-  minPatternLengthErrorMessage: string;
-  wrongPatternMessage: string;
-  changePatternFirstMessage: string;
-  changePatternSecondMessage: string;
-  patternTotalCountReachedErrorMessage: string;
-  newPatternDelayDurationMessage: string;
-  newPatternMatchedMessage: string;
-  patternCountLimitedErrorMessage: string;
-  samePatternMatchedMessage: string;
 
   // Error/attempt limiting
   isWrongPatternCountLimited?: boolean;
@@ -179,28 +189,15 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
     connectedDotsColor: 'blue',
     correctPatternColor: 'green',
     minPatternLength: 3,
-    newPatternConfirmationMessage: '',
     wrongPatternDelayTime: 1000,
-    correctPatternMessage: '',
     correctPatternDelayTime: 1000,
-    correctPatternDelayDurationMessage: '',
+    changePatternDelayTime: 1000,
+    newPatternDelayTime: 1000,
     isWrongPatternCountLimited: false,
     totalWrongPatternCount: 0,
-    wrongPatternDelayDurationMessage: '',
-    minPatternLengthErrorMessage: '',
-    wrongPatternMessage: '',
-    changePatternFirstMessage: '',
-    changePatternDelayTime: 1000,
-    changePatternSecondMessage: '',
     isEnableHeadingText: false,
     headingText: '',
     enablePatternNotSameCondition: true,
-    patternTotalCountReachedErrorMessage: '',
-    newPatternDelayDurationMessage: '',
-    newPatternMatchedMessage: '',
-    newPatternDelayTime: 1000,
-    patternCountLimitedErrorMessage: '',
-    samePatternMatchedMessage: '',
     hintMessages: {},
     hintTextStyle: { color: 'blue' },
     headingTextStyle: { color: 'blue' },
@@ -424,10 +421,13 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
   }
 
   /**
-   * Helper to get hint message from hintMessages prop or fall back to deprecated props
+   * Helper to get hint message from hintMessages prop or use default
    */
-  private _getHintMessage(key: keyof HintMessages, fallbackProp: string): string {
-    return this.props.hintMessages?.[key] || fallbackProp;
+  private _getHintMessage(
+    key: keyof HintMessages,
+    defaultMessage: string = ''
+  ): string {
+    return this.props.hintMessages?.[key] || defaultMessage;
   }
 
   /**
@@ -462,8 +462,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         showError: true,
         showHint: true,
         hintText: this._getHintMessage(
-          'correctPatternDelay',
-          this.props.correctPatternDelayDurationMessage
+          'confirmPatternMatchedImmediate',
+          'Pattern Matched'
         ),
       },
       () => {
@@ -474,8 +474,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             showHint: true,
             showError: false,
             hintText: this._getHintMessage(
-              'confirmPattern',
-              this.props.correctPatternMessage
+              'confirmPatternMatchedAfterDelay',
+              'Successfully Confirmed'
             ),
             matched: false,
             pattern: [],
@@ -512,39 +512,49 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         this.setState({
           showHint: true,
           hintText: this._getHintMessage(
-            'correctPatternDelay',
-            this.props.correctPatternDelayDurationMessage
+            changePatternConfirm
+              ? 'changeConfirmCurrentMatchedImmediate'
+              : 'confirmPatternMatchedImmediate',
+            'Pattern Matched'
           ),
           matched: true,
         });
 
-        this._patternMatchedTimeout = setTimeout(() => {
-          this.setState(
-            {
-              showHint: true,
-              processName: changePatternConfirm
-                ? PatternProcess.CONFIRM_PATTERN
-                : PatternProcess.NEW_PATTERN,
-              hintText: changePatternConfirm
-                ? this._getHintMessage(
-                    'confirmNewPattern',
-                    this.props.changePatternSecondMessage
-                  )
-                : this._getHintMessage(
-                    'newPattern',
-                    this.props.changePatternFirstMessage
-                  ),
-              showError: false,
-              matched: false,
-              pattern: [],
-            },
-            () => {
-              if (changePatternConfirm && this.props.onPatternMatchAfterDelay) {
-                this.props.onPatternMatchAfterDelay(pattern);
+        this._patternMatchedTimeout = setTimeout(
+          () => {
+            this.setState(
+              {
+                showHint: true,
+                processName: changePatternConfirm
+                  ? PatternProcess.CONFIRM_PATTERN
+                  : PatternProcess.NEW_PATTERN,
+                hintText: changePatternConfirm
+                  ? this._getHintMessage(
+                      'changeConfirmNewPatternInstruction',
+                      'Now Confirm New Pattern'
+                    )
+                  : this._getHintMessage(
+                      'changeSetNewPatternInstruction',
+                      'Set New Pattern'
+                    ),
+                showError: false,
+                matched: false,
+                pattern: [],
+              },
+              () => {
+                if (
+                  changePatternConfirm &&
+                  this.props.onPatternMatchAfterDelay
+                ) {
+                  this.props.onPatternMatchAfterDelay(pattern);
+                }
               }
-            }
-          );
-        }, changePatternConfirm ? this.props.correctPatternDelayTime : this.props.changePatternDelayTime);
+            );
+          },
+          changePatternConfirm
+            ? this.props.correctPatternDelayTime
+            : this.props.changePatternDelayTime
+        );
       }
     );
   }
@@ -576,20 +586,20 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
       ? isLimited
         ? this._wrongPatternCount > 0
           ? this._getHintMessage(
-              'wrongPattern',
-              this.props.patternCountLimitedErrorMessage
+              'confirmPatternLimitedWarning',
+              `${this._wrongPatternCount} attempt(s) left`
             )
           : this._getHintMessage(
-              'wrongPattern',
-              this.props.patternTotalCountReachedErrorMessage
+              'confirmPatternAttemptsExhausted',
+              'Too Many Attempts'
             )
         : this._getHintMessage(
-            'wrongPatternDelay',
-            this.props.wrongPatternDelayDurationMessage
+            'confirmPatternMismatchImmediate',
+            'Pattern Incorrect'
           )
       : this._getHintMessage(
-          'minPatternLengthError',
-          this.props.minPatternLengthErrorMessage
+          'confirmPatternTooShortError',
+          'Pattern Too Short'
         );
 
     this.setState(
@@ -614,16 +624,16 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
               hintText: isLimited
                 ? this._wrongPatternCount > 0
                   ? this._getHintMessage(
-                      'wrongPattern',
-                      this.props.patternCountLimitedErrorMessage
+                      'confirmPatternLimitedWarning',
+                      `${this._wrongPatternCount} attempt(s) left`
                     )
                   : this._getHintMessage(
-                      'wrongPattern',
-                      this.props.patternTotalCountReachedErrorMessage
+                      'confirmPatternAttemptsExhausted',
+                      'Try Again Later'
                     )
                 : this._getHintMessage(
-                    'wrongPattern',
-                    this.props.wrongPatternMessage
+                    'confirmPatternMismatchAfterDelay',
+                    'Try Again'
                   ),
               showError: false,
               pattern: [],
@@ -658,12 +668,12 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         showHint: true,
         hintText: isLongEnough
           ? this._getHintMessage(
-              'wrongPatternDelay',
-              this.props.wrongPatternDelayDurationMessage
+              'changeConfirmCurrentMismatchImmediate',
+              'Pattern Incorrect'
             )
           : this._getHintMessage(
-              'minPatternLengthError',
-              this.props.minPatternLengthErrorMessage
+              'changeConfirmCurrentTooShortError',
+              'Pattern Too Short'
             ),
       },
       () => {
@@ -672,12 +682,12 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             showHint: true,
             hintText: changePatternConfirm
               ? this._getHintMessage(
-                  'confirmNewPattern',
-                  this.props.newPatternConfirmationMessage
+                  'changeConfirmNewPatternInstruction',
+                  'Now Confirm New Pattern'
                 )
               : this._getHintMessage(
-                  'wrongPattern',
-                  this.props.wrongPatternMessage
+                  'changeConfirmCurrentMismatchAfterDelay',
+                  'Try Again'
                 ),
             showError: false,
             pattern: [],
@@ -714,8 +724,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         matched: false,
         showHint: true,
         hintText: this._getHintMessage(
-          'minPatternLengthError',
-          this.props.minPatternLengthErrorMessage
+          'setPatternTooShortError',
+          'Pattern Too Short'
         ),
       },
       () => {
@@ -723,8 +733,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
           this.setState({
             showHint: true,
             hintText: this._getHintMessage(
-              'newPattern',
-              this.props.wrongPatternMessage
+              'setPatternTooShortAfterDelay',
+              'Try Again'
             ),
             showError: false,
             pattern: [],
@@ -746,8 +756,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         showError: true,
         showHint: true,
         hintText: this._getHintMessage(
-          'correctPatternDelay',
-          this.props.correctPatternDelayDurationMessage
+          'setPatternSuccessImmediate',
+          'Pattern Set'
         ),
         initialGestureCoordinate: null,
         activeDotCoordinate: null,
@@ -759,8 +769,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             showHint: true,
             processName: PatternProcess.CONFIRM_PATTERN,
             hintText: this._getHintMessage(
-              'confirmNewPattern',
-              this.props.newPatternConfirmationMessage
+              'confirmNewPatternInstruction',
+              'Confirm Pattern'
             ),
             showError: false,
             matched: false,
@@ -777,8 +787,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
   private _handleChangePatternSet(): void {
     const { pattern } = this.state;
     const currentPatternString = getCorrectPatterninString(pattern);
-    const isSameAsOld =
-      this.props.correctPattern === currentPatternString;
+    const isSameAsOld = this.props.correctPattern === currentPatternString;
     const shouldReject =
       this.props.enablePatternNotSameCondition && isSameAsOld;
 
@@ -801,8 +810,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         matched: false,
         showHint: true,
         hintText: this._getHintMessage(
-          'patternMismatch',
-          this.props.samePatternMatchedMessage
+          'changeSetNewPatternSameAsOldError',
+          'Same as Current Pattern'
         ),
       },
       () => {
@@ -810,8 +819,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
           this.setState({
             showHint: true,
             hintText: this._getHintMessage(
-              'newPattern',
-              this.props.wrongPatternMessage
+              'changeSetNewPatternSameAsOldAfterDelay',
+              'Try Different Pattern'
             ),
             showError: false,
             pattern: [],
@@ -835,8 +844,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
         showError: true,
         showHint: true,
         hintText: this._getHintMessage(
-          'newPatternDelay',
-          this.props.newPatternDelayDurationMessage
+          'changeSetNewPatternSuccessImmediate',
+          'Pattern Changed'
         ),
       },
       () => {
@@ -846,8 +855,8 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
             showHint: true,
             processName: PatternProcess.CONFIRM_PATTERN,
             hintText: this._getHintMessage(
-              'confirmNewPattern',
-              this.props.newPatternMatchedMessage
+              'changeConfirmNewPatternInstruction',
+              'Confirm New Pattern'
             ),
             showError: false,
             changePatternConfirm: true,
@@ -1005,8 +1014,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
 
                 const startIndex = this._mappedDotsIndex.findIndex(
                   (dot) =>
-                    dot.x === startCoordinate.x &&
-                    dot.y === startCoordinate.y
+                    dot.x === startCoordinate.x && dot.y === startCoordinate.y
                 );
 
                 const endCoordinate = pattern[index + 1];
@@ -1014,8 +1022,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
 
                 const endIndex = this._mappedDotsIndex.findIndex(
                   (dot) =>
-                    dot.x === endCoordinate.x &&
-                    dot.y === endCoordinate.y
+                    dot.x === endCoordinate.x && dot.y === endCoordinate.y
                 );
 
                 if (startIndex < 0 || endIndex < 0) {

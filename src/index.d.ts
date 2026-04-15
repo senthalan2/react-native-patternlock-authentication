@@ -14,15 +14,39 @@ declare module 'react-native-patternlock-authentication' {
    * Hint messages for different pattern flow steps
    */
   export interface HintMessages {
-    confirmPattern?: string;
-    newPattern?: string;
-    confirmNewPattern?: string;
-    wrongPattern?: string;
-    minPatternLengthError?: string;
-    patternMismatch?: string;
-    wrongPatternDelay?: string;
-    correctPatternDelay?: string;
-    newPatternDelay?: string;
+    // Confirm Pattern Flow - Simple
+    confirmPatternMismatchImmediate?: string;
+    confirmPatternMismatchAfterDelay?: string;
+    confirmPatternMatchedImmediate?: string;
+    confirmPatternMatchedAfterDelay?: string;
+    confirmPatternTooShortError?: string;
+
+    // Confirm Pattern Flow - With Attempt Limits
+    confirmPatternAttemptsExhausted?: string;
+    confirmPatternLimitedWarning?: string;
+
+    // Set New Pattern Flow
+    setPatternTooShortError?: string;
+    setPatternTooShortAfterDelay?: string;
+    setPatternSuccessImmediate?: string;
+
+    // Confirm New Pattern Flow
+    confirmNewPatternInstruction?: string;
+
+    // Change Pattern - Confirm Current Step
+    changeConfirmCurrentMismatchImmediate?: string;
+    changeConfirmCurrentMismatchAfterDelay?: string;
+    changeConfirmCurrentMatchedImmediate?: string;
+    changeConfirmCurrentTooShortError?: string;
+
+    // Change Pattern - Set New Pattern Step
+    changeSetNewPatternInstruction?: string;
+    changeSetNewPatternSameAsOldError?: string;
+    changeSetNewPatternSameAsOldAfterDelay?: string;
+    changeSetNewPatternSuccessImmediate?: string;
+
+    // Change Pattern - Confirm New Pattern Step
+    changeConfirmNewPatternInstruction?: string;
   }
 
   export interface GeneralPatternLockProps {
@@ -85,21 +109,6 @@ declare module 'react-native-patternlock-authentication' {
     // Hint and message configuration
     showHintMessage?: boolean;
     hintMessages?: HintMessages;
-
-    // Deprecated message props (for backward compatibility - prefer hintMessages)
-    newPatternConfirmationMessage?: string;
-    correctPatternMessage?: string;
-    correctPatternDelayDurationMessage?: string;
-    wrongPatternDelayDurationMessage?: string;
-    minPatternLengthErrorMessage?: string;
-    wrongPatternMessage?: string;
-    changePatternFirstMessage?: string;
-    changePatternSecondMessage?: string;
-    patternTotalCountReachedErrorMessage?: string;
-    newPatternDelayDurationMessage?: string;
-    newPatternMatchedMessage?: string;
-    patternCountLimitedErrorMessage?: string;
-    samePatternMatchedMessage?: string;
 
     // Error/attempt limiting
     isWrongPatternCountLimited?: boolean;
