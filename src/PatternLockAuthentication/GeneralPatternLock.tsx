@@ -12,6 +12,7 @@ import {
   type GestureResponderEvent,
   type PanResponderGestureState,
   type ColorValue,
+  type PanResponderInstance,
 } from 'react-native';
 
 import Svg, { Line, Circle } from 'react-native-svg';
@@ -25,29 +26,46 @@ import {
 
 const { width, height } = Dimensions.get('window');
 
-type Coordinate = {
+/**
+ * Represents a coordinate point with x and y values
+ */
+export type Coordinate = {
   x: number;
   y: number;
 };
 
+/**
+ * Props for GeneralPatternLock component
+ */
 interface Props {
+  // Container configuration
   containerDimension: number;
   containerWidth: number;
   containerHeight: number;
+
+  // Pattern configuration
   correctPattern: string;
+
+  // Timing configuration
   wrongPatternDelayTime: number;
   correctPatternDelayTime: number;
+
+  // Visual configuration
   dotsAndLineColor: ColorValue;
   wrongPatternColor: ColorValue;
   lineStrokeWidth: number;
   defaultDotRadius: number;
   snapDotRadius: number;
   snapDuration: number;
+  matchedPatternColor: ColorValue;
+
+  // Hint configuration
   enableHint: boolean;
   hint: string;
   hintContainerStyle?: StyleProp<ViewStyle>;
   hintTextStyle?: StyleProp<TextStyle>;
-  matchedPatternColor: ColorValue;
+
+  // Callbacks
   onPatternMatch?: (pattern: Coordinate[]) => void;
   onWrongPattern?: (pattern: Coordinate[]) => void;
   onPatternMatchAfterDelay?: (pattern: Coordinate[]) => void;
@@ -55,22 +73,22 @@ interface Props {
 }
 
 interface State {
-  activeDotCoordinate: Coordinate | null | undefined;
-  initialGestureCoordinate: Coordinate | null | undefined;
-  pattern: (Coordinate | undefined)[];
+  activeDotCoordinate: Coordinate | null;
+  initialGestureCoordinate: Coordinate | null;
+  pattern: Coordinate[];
   showError: boolean;
   disableTouch: boolean;
   matched: boolean;
 }
 
 export default class GeneralPatternLock extends React.Component<Props, State> {
-  private _panResponder: any;
+  private _panResponder!: PanResponderInstance;
   private _activeLine: Line | null = null;
   private _dots: Coordinate[] = [];
   private _dotNodes: Array<Circle | null> = [];
   private _mappedDotsIndex: Coordinate[] = [];
   private _snapAnimatedValues: Animated.Value[] = [];
-  private _resetTimeout?: NodeJS.Timeout;
+  private _resetTimeout?: ReturnType<typeof setTimeout>;
 
   static defaultProps: Partial<Props> = {
     containerDimension: 3,
@@ -124,205 +142,255 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
       return animatedValue;
     });
 
+    this._createPanResponder();
+  }
+
+  /**
+   * Create and configure the pan responder for gesture handling
+   */
+  private _createPanResponder(): void {
     this._panResponder = PanResponder.create({
       onMoveShouldSetPanResponderCapture: () => !this.state.disableTouch,
 
       onPanResponderGrant: (e: GestureResponderEvent) => {
-        const { locationX, locationY } = e.nativeEvent;
-
-        const activeDotIndex = getDotIndex(
-          { x: locationX, y: locationY },
-          this._dots
-        );
-
-        if (activeDotIndex != null) {
-          const activeDotCoordinate = this._dots[activeDotIndex];
-          const firstDot = this._mappedDotsIndex[activeDotIndex];
-          const dotWillSnap = this._snapAnimatedValues[activeDotIndex];
-
-          this.setState(
-            {
-              activeDotCoordinate,
-              initialGestureCoordinate: activeDotCoordinate,
-              pattern: [firstDot],
-            },
-            () => {
-              this._snapDot(dotWillSnap);
-            }
-          );
-        }
+        this._handleGestureGrant(e);
       },
 
       onPanResponderMove: (
         _e: GestureResponderEvent,
         gestureState: PanResponderGestureState
       ) => {
-        const { dx, dy } = gestureState;
-        const { initialGestureCoordinate, activeDotCoordinate, pattern } =
-          this.state;
-
-        if (!activeDotCoordinate || !initialGestureCoordinate) {
-          return;
-        }
-
-        const endGestureX = initialGestureCoordinate.x + dx;
-        const endGestureY = initialGestureCoordinate.y + dy;
-
-        const matchedDotIndex = getDotIndex(
-          { x: endGestureX, y: endGestureY },
-          this._dots
-        );
-
-        const matchedDot =
-          matchedDotIndex != null && this._mappedDotsIndex[matchedDotIndex];
-
-        if (
-          matchedDotIndex != null &&
-          matchedDot &&
-          !this._isAlreadyInPattern(matchedDot)
-        ) {
-          const newPattern = {
-            x: matchedDot.x,
-            y: matchedDot.y,
-          };
-
-          let intermediateDotIndexes: number[] = [];
-
-          if (pattern.length > 0) {
-            intermediateDotIndexes = getIntermediateDotIndexes(
-              pattern[pattern.length - 1],
-              newPattern,
-              this.props.containerDimension
-            );
-          }
-
-          const filteredIntermediateDotIndexes = intermediateDotIndexes.filter(
-            (index) => !this._isAlreadyInPattern(this._mappedDotsIndex[index])
-          );
-
-          filteredIntermediateDotIndexes.forEach((index) => {
-            const mappedDot = this._mappedDotsIndex[index];
-            if (mappedDot) {
-              pattern.push({ x: mappedDot?.x, y: mappedDot?.y });
-            }
-          });
-
-          pattern.push(newPattern);
-
-          const animateIndexes = [
-            ...filteredIntermediateDotIndexes,
-            matchedDotIndex,
-          ];
-
-          this.setState(
-            {
-              pattern,
-              activeDotCoordinate: this._dots[matchedDotIndex],
-            },
-            () => {
-              if (animateIndexes.length) {
-                animateIndexes.forEach((index) => {
-                  this._snapDot(this._snapAnimatedValues[index]);
-                });
-              }
-            }
-          );
-        } else {
-          this._activeLine?.setNativeProps({
-            x2: endGestureX.toString(),
-            y2: endGestureY.toString(),
-          });
-        }
+        this._handleGestureMove(gestureState);
       },
 
       onPanResponderRelease: () => {
-        const { pattern } = this.state;
-
-        if (!pattern.length) return;
-
-        if (this._isPatternMatched(pattern)) {
-          this.setState(
-            {
-              initialGestureCoordinate: null,
-              activeDotCoordinate: null,
-              disableTouch: true,
-              matched: true,
-            },
-            () => {
-              if (this.props.onPatternMatch) {
-                this.props.onPatternMatch(pattern as Coordinate[]);
-              }
-
-              this._resetTimeout = setTimeout(() => {
-                this.setState(
-                  {
-                    showError: false,
-                    matched: false,
-                    disableTouch: false,
-                    pattern: [],
-                  },
-                  () => {
-                    if (this.props.onPatternMatchAfterDelay) {
-                      this.props.onPatternMatchAfterDelay(
-                        pattern as Coordinate[]
-                      );
-                    }
-                  }
-                );
-              }, this.props.correctPatternDelayTime);
-            }
-          );
-        } else {
-          this.setState(
-            {
-              initialGestureCoordinate: null,
-              activeDotCoordinate: null,
-              showError: true,
-              disableTouch: true,
-            },
-            () => {
-              if (this.props.onWrongPattern) {
-                this.props.onWrongPattern(pattern as Coordinate[]);
-              }
-
-              this._resetTimeout = setTimeout(() => {
-                this.setState(
-                  {
-                    showError: false,
-                    disableTouch: false,
-                    pattern: [],
-                  },
-                  () => {
-                    if (this.props.onWrongPatternAfterDelay) {
-                      this.props.onWrongPatternAfterDelay(
-                        pattern as Coordinate[]
-                      );
-                    }
-                  }
-                );
-              }, this.props.wrongPatternDelayTime);
-            }
-          );
-        }
+        this._handleGestureRelease();
       },
     });
   }
 
-  componentWillUnmount() {
+  /**
+   * Handle the start of a gesture (finger touches down on a dot)
+   */
+  private _handleGestureGrant(e: GestureResponderEvent): void {
+    const { locationX, locationY } = e.nativeEvent;
+
+    const activeDotIndex = getDotIndex(
+      { x: locationX, y: locationY },
+      this._dots
+    );
+
+    if (activeDotIndex != null) {
+      const activeDotCoordinate = this._dots[activeDotIndex];
+      const firstDot = this._mappedDotsIndex[activeDotIndex];
+      const dotWillSnap = this._snapAnimatedValues[activeDotIndex];
+
+      this.setState(
+        {
+          activeDotCoordinate: activeDotCoordinate ?? null,
+          initialGestureCoordinate: activeDotCoordinate ?? null,
+          pattern: firstDot ? [firstDot] : [],
+        },
+        () => {
+          this._snapDot(dotWillSnap);
+        }
+      );
+    }
+  }
+
+  /**
+   * Handle gesture movement to draw the pattern
+   * Fixes the line rendering issue by ensuring the line is always visible
+   */
+  private _handleGestureMove(gestureState: PanResponderGestureState): void {
+    const { dx, dy } = gestureState;
+    const { initialGestureCoordinate, activeDotCoordinate, pattern } =
+      this.state;
+
+    if (!activeDotCoordinate || !initialGestureCoordinate) {
+      return;
+    }
+
+    const endGestureX = initialGestureCoordinate.x + dx;
+    const endGestureY = initialGestureCoordinate.y + dy;
+    const matchedDotIndex = getDotIndex(
+      { x: endGestureX, y: endGestureY },
+      this._dots
+    );
+    const matchedDot =
+      matchedDotIndex != null && this._mappedDotsIndex[matchedDotIndex];
+
+    if (
+      matchedDotIndex != null &&
+      matchedDot &&
+      !this._isAlreadyInPattern(matchedDot)
+    ) {
+      // Dot matched - add to pattern
+      const newPattern = {
+        x: matchedDot.x,
+        y: matchedDot.y,
+      };
+
+      let intermediateDotIndexes: number[] = [];
+
+      if (pattern.length > 0) {
+        intermediateDotIndexes = getIntermediateDotIndexes(
+          pattern[pattern.length - 1],
+          newPattern,
+          this.props.containerDimension
+        );
+      }
+
+      const filteredIntermediateDotIndexes = intermediateDotIndexes.filter(
+        (index) => !this._isAlreadyInPattern(this._mappedDotsIndex[index])
+      );
+
+      filteredIntermediateDotIndexes.forEach((index) => {
+        const mappedDot = this._mappedDotsIndex[index];
+        if (mappedDot) {
+          pattern.push({ x: mappedDot.x, y: mappedDot.y });
+        }
+      });
+
+      pattern.push(newPattern);
+
+      const animateIndexes = [
+        ...filteredIntermediateDotIndexes,
+        matchedDotIndex,
+      ];
+
+      this.setState(
+        {
+          pattern,
+          activeDotCoordinate: this._dots[matchedDotIndex] ?? null,
+        },
+        () => {
+          if (animateIndexes.length) {
+            animateIndexes.forEach((index) => {
+              this._snapDot(this._snapAnimatedValues[index]);
+            });
+          }
+        }
+      );
+    } else {
+      // No dot match - update the active line to follow the finger
+      // FIX: Always ensure the line updates correctly
+      if (this._activeLine) {
+        this._activeLine.setNativeProps({
+          x2: endGestureX.toString(),
+          y2: endGestureY.toString(),
+        });
+      }
+    }
+  }
+
+  /**
+   * Handle the end of a gesture (finger lifts up)
+   */
+  private _handleGestureRelease(): void {
+    const { pattern } = this.state;
+
+    if (!pattern.length) return;
+
+    if (this._isPatternMatched(pattern)) {
+      this._handlePatternMatch();
+    } else {
+      this._handlePatternMismatch();
+    }
+  }
+
+  /**
+   * Handle successful pattern match
+   */
+  private _handlePatternMatch(): void {
+    const { pattern } = this.state;
+
+    this.setState(
+      {
+        initialGestureCoordinate: null,
+        activeDotCoordinate: null,
+        disableTouch: true,
+        matched: true,
+      },
+      () => {
+        if (this.props.onPatternMatch) {
+          this.props.onPatternMatch(pattern);
+        }
+
+        this._resetTimeout = setTimeout(() => {
+          this.setState(
+            {
+              showError: false,
+              matched: false,
+              disableTouch: false,
+              pattern: [],
+            },
+            () => {
+              if (this.props.onPatternMatchAfterDelay) {
+                this.props.onPatternMatchAfterDelay(pattern);
+              }
+            }
+          );
+        }, this.props.correctPatternDelayTime);
+      }
+    );
+  }
+
+  /**
+   * Handle pattern mismatch
+   */
+  private _handlePatternMismatch(): void {
+    const { pattern } = this.state;
+
+    this.setState(
+      {
+        initialGestureCoordinate: null,
+        activeDotCoordinate: null,
+        showError: true,
+        disableTouch: true,
+      },
+      () => {
+        if (this.props.onWrongPattern) {
+          this.props.onWrongPattern(pattern);
+        }
+
+        this._resetTimeout = setTimeout(() => {
+          this.setState(
+            {
+              showError: false,
+              disableTouch: false,
+              pattern: [],
+            },
+            () => {
+              if (this.props.onWrongPatternAfterDelay) {
+                this.props.onWrongPatternAfterDelay(pattern);
+              }
+            }
+          );
+        }, this.props.wrongPatternDelayTime);
+      }
+    );
+  }
+
+  componentWillUnmount(): void {
     if (this._resetTimeout) {
       clearTimeout(this._resetTimeout);
     }
   }
 
-  private _isAlreadyInPattern(coordinate: Coordinate | undefined) {
-    return (
-      this.state.pattern.find(
-        (dot) => dot?.x === coordinate?.x && dot?.y === coordinate?.y
-      ) != null
+  /**
+   * Check if a coordinate is already part of the current pattern
+   */
+  private _isAlreadyInPattern(coordinate: Coordinate | undefined): boolean {
+    return this.state.pattern.some(
+      (dot) => dot.x === coordinate?.x && dot.y === coordinate?.y
     );
   }
 
-  private _isPatternMatched(currentPattern: (Coordinate | undefined)[]) {
+  /**
+   * Check if the current pattern matches the correct pattern
+   */
+  private _isPatternMatched(currentPattern: Coordinate[]): boolean {
     const correctPatternArray = getCorrectPatterninArray(
       this.props.correctPattern
     );
@@ -335,7 +403,12 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
       const correctDot = correctPatternArray[i];
       const currentDot = currentPattern[i];
 
-      if (correctDot?.x !== currentDot?.x || correctDot?.y !== currentDot?.y) {
+      if (
+        !correctDot ||
+        !currentDot ||
+        correctDot.x !== currentDot.x ||
+        correctDot.y !== currentDot.y
+      ) {
         return false;
       }
     }
@@ -343,10 +416,14 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
     return true;
   }
 
-  private _snapDot(animatedValue: Animated.Value | undefined) {
+  /**
+   * Animate a dot snap effect
+   */
+  private _snapDot(animatedValue: Animated.Value | undefined): void {
     if (!animatedValue) {
       return;
     }
+
     Animated.sequence([
       Animated.timing(animatedValue, {
         toValue: this.props.snapDotRadius,
@@ -377,14 +454,17 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
           <Svg height={containerHeight} width={containerWidth}>
             {this._dots.map((dot, i) => {
               const mappedDot = this._mappedDotsIndex[i];
+              if (!mappedDot) return null;
+
               const isIncludedInPattern = pattern.find(
-                (d) => d?.x === mappedDot?.x && d?.y === mappedDot?.y
+                (d) => d.x === mappedDot.x && d.y === mappedDot.y
               );
 
               return (
                 <Circle
-                  // @ts-ignore
-                  ref={(circle) => (this._dotNodes[i] = circle)}
+                  ref={(circle) => {
+                    this._dotNodes[i] = circle;
+                  }}
                   key={i}
                   cx={dot.x}
                   cy={dot.y}
@@ -405,14 +485,14 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 
               const startIndex = this._mappedDotsIndex.findIndex(
                 (dot) =>
-                  dot.x === startCoordinate?.x && dot.y === startCoordinate?.y
+                  dot.x === startCoordinate.x && dot.y === startCoordinate.y
               );
 
               const endCoordinate = pattern[index + 1];
+              if (!endCoordinate) return null;
 
               const endIndex = this._mappedDotsIndex.findIndex(
-                (dot) =>
-                  dot.x === endCoordinate?.x && dot.y === endCoordinate?.y
+                (dot) => dot.x === endCoordinate.x && dot.y === endCoordinate.y
               );
 
               if (startIndex < 0 || endIndex < 0) return null;
@@ -420,13 +500,15 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
               const actualStartDot = this._dots[startIndex];
               const actualEndDot = this._dots[endIndex];
 
+              if (!actualStartDot || !actualEndDot) return null;
+
               return (
                 <Line
                   key={`fixedLine${index}`}
-                  x1={actualStartDot?.x}
-                  y1={actualStartDot?.y}
-                  x2={actualEndDot?.x}
-                  y2={actualEndDot?.y}
+                  x1={actualStartDot.x}
+                  y1={actualStartDot.y}
+                  x2={actualEndDot.x}
+                  y2={actualEndDot.y}
                   stroke={
                     matched
                       ? this.props.matchedPatternColor
@@ -441,8 +523,9 @@ export default class GeneralPatternLock extends React.Component<Props, State> {
 
             {activeDotCoordinate && (
               <Line
-                // @ts-ignore
-                ref={(component) => (this._activeLine = component)}
+                ref={(component) => {
+                  this._activeLine = component;
+                }}
                 x1={activeDotCoordinate.x}
                 y1={activeDotCoordinate.y}
                 x2={activeDotCoordinate.x}
