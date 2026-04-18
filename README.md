@@ -1,4 +1,5 @@
 
+
 # 🔐 react-native-patternlock-authentication
 
 > A customizable Pattern Lock Security component for **Android** and **iOS** built with React Native and SVG.
@@ -325,7 +326,8 @@ confirmPatternMatchedImmediate: 'Pattern Matched',
 confirmPatternMatchedAfterDelay: 'Successfully Confirmed',
 confirmPatternTooShortError: 'Pattern Too Short',
 confirmPatternAttemptsExhausted: 'Too Many Attempts',
-confirmPatternLimitedWarning: '${remainingCount} attempt(s) left',
+confirmPatternLimitedWarningImmediate: '${remainingCount} attempt(s) left',
+confirmPatternLimitedWarningAfterDelay: '${remainingCount} attempt(s) left',
 // Set New Pattern Flow
 setPatternTooShortError: 'Pattern Too Short',
 setPatternTooShortAfterDelay: 'Try Again',
@@ -359,7 +361,8 @@ changeConfirmNewPatternInstruction: 'Confirm New Pattern',
 | `confirmPatternMatchedAfterDelay` | Confirm Pattern | After delay on match |
 | `confirmPatternTooShortError` | Confirm Pattern | Pattern length too short |
 | `confirmPatternAttemptsExhausted` | Confirm Pattern | Max attempts reached |
-| `confirmPatternLimitedWarning` | Confirm Pattern | Limited attempts remain |
+| `confirmPatternLimitedWarningImmediate` | Confirm Pattern | Limited attempts remain |
+| `confirmPatternLimitedWarningAfterDelay` | Confirm Pattern | After delay limited attempts remain |
 | `setPatternTooShortError` | Set New Pattern | Pattern length too short |
 | `setPatternTooShortAfterDelay` | Set New Pattern | After delay on short entry |
 | `setPatternSuccessImmediate` | Set New Pattern | Pattern set successfully |
