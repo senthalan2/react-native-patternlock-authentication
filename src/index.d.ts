@@ -23,7 +23,8 @@ declare module 'react-native-patternlock-authentication' {
 
     // Confirm Pattern Flow - With Attempt Limits
     confirmPatternAttemptsExhausted?: string;
-    confirmPatternLimitedWarning?: string;
+    confirmPatternLimitedWarningImmediate?: string;
+    confirmPatternLimitedWarningAfterDelay?: string;
 
     // Set New Pattern Flow
     setPatternTooShortError?: string;

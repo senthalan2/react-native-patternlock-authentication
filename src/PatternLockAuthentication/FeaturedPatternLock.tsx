@@ -51,7 +51,8 @@ interface HintMessages {
 
   // Confirm Pattern Flow - Error with attempts limit
   confirmPatternAttemptsExhausted?: string;
-  confirmPatternLimitedWarning?: string;
+  confirmPatternLimitedWarningImmediate?: string;
+  confirmPatternLimitedWarningAfterDelay?: string;
 
   // New Pattern Flow - Set
   setPatternTooShortError?: string;
@@ -586,7 +587,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
       ? isLimited
         ? this._wrongPatternCount > 0
           ? this._getHintMessage(
-              'confirmPatternLimitedWarning',
+              'confirmPatternLimitedWarningImmediate',
               `${this._wrongPatternCount} attempt(s) left`
             )
           : this._getHintMessage(
@@ -624,7 +625,7 @@ export default class FeaturedPatternLock extends React.Component<Props, State> {
               hintText: isLimited
                 ? this._wrongPatternCount > 0
                   ? this._getHintMessage(
-                      'confirmPatternLimitedWarning',
+                      'confirmPatternLimitedWarningAfterDelay',
                       `${this._wrongPatternCount} attempt(s) left`
                     )
                   : this._getHintMessage(
